@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The default notification channel's name. Override it in the app, or set se.datatalks.push.notification_channel_name. -->
+    <string name="datatalks_push_default_channel_name">Notifications</string>
+</resources>

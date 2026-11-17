@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application>
+        <!-- An app with its own messaging service receives the messages instead and forwards them to DataTalksPush. -->
+        <service
+            android:name=".DataTalksMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- No UI: handles a notification tap, reports the open, then starts the link or the launcher. -->
+        <activity
+            android:name=".internal.NotificationOpenActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.NoDisplay" />
+
+        <!-- Transparent: shows the permission prompt over the app's screen so the SDK receives the result. -->
+        <activity
+            android:name=".internal.PermissionRequestActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+    </application>
+</manifest>
