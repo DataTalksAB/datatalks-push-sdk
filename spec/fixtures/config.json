@@ -1,0 +1,43 @@
+{
+  "name": "config",
+  "summary": "The SDK reads the app settings with the app key.",
+  "app": {
+    "status": "Ready",
+    "require_verified_identity": true,
+    "platforms": {
+      "android": {
+        "transport": "fcm"
+      },
+      "ios": {
+        "transport": "apns"
+      }
+    }
+  },
+  "steps": [
+    {
+      "request": {
+        "method": "GET",
+        "path": "/v1/config",
+        "headers": {
+          "X-DataTalks-App-Key": "{{app_key}}",
+          "X-DataTalks-SDK": "datatalks-push-android/0.1.0-alpha"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "require_verified_identity": true,
+          "platforms": {
+            "android": {
+              "transport": "fcm"
+            },
+            "ios": {
+              "transport": "apns"
+            }
+          },
+          "refresh_after_seconds": 3600
+        }
+      }
+    }
+  ]
+}

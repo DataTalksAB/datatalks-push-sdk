@@ -1,0 +1,156 @@
+{
+  "name": "events-implied-unknown-skipped",
+  "summary": "Each event answered on its own: an open of a push with no delivery yet also hands on its delivery, an event already recorded is a duplicate, another install's push and one never sent are unknown, a broken item is skipped, and a device time before the send is kept at the send. With a wrong device secret nothing is answered but 401.",
+  "app": {
+    "status": "Ready",
+    "require_verified_identity": true,
+    "platforms": {
+      "android": {
+        "transport": "fcm"
+      },
+      "ios": {
+        "transport": "apns"
+      }
+    }
+  },
+  "pushes": {
+    "offer": {
+      "install_id": "3f1c2d4e-5a6b-4c7d-8e9f-0a1b2c3d4e5f",
+      "sent_at": "2026-11-04T11:00:00Z"
+    },
+    "seen": {
+      "install_id": "3f1c2d4e-5a6b-4c7d-8e9f-0a1b2c3d4e5f",
+      "sent_at": "2026-11-04T10:00:00Z",
+      "delivery": true,
+      "open": true
+    },
+    "elsewhere": {
+      "install_id": "9a8b7c6d-5e4f-4a3b-8c2d-1e0f9a8b7c6d",
+      "sent_at": "2026-11-04T11:00:00Z"
+    },
+    "early": {
+      "install_id": "3f1c2d4e-5a6b-4c7d-8e9f-0a1b2c3d4e5f",
+      "sent_at": "2026-11-04T11:00:00Z"
+    }
+  },
+  "steps": [
+    {
+      "request": {
+        "method": "POST",
+        "path": "/v1/devices",
+        "headers": {
+          "X-DataTalks-App-Key": "{{app_key}}",
+          "X-DataTalks-SDK": "datatalks-push-ios/0.1.0-alpha"
+        },
+        "body": {
+          "install_id": "3f1c2d4e-5a6b-4c7d-8e9f-0a1b2c3d4e5f",
+          "platform": "ios",
+          "apns_token": "a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90",
+          "os_permission": "authorized"
+        }
+      },
+      "response": {
+        "status": 201,
+        "body": {
+          "install_id": "3f1c2d4e-5a6b-4c7d-8e9f-0a1b2c3d4e5f",
+          "device_secret": "{{capture:device_secret}}"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "path": "/v1/devices/3f1c2d4e-5a6b-4c7d-8e9f-0a1b2c3d4e5f/events",
+        "headers": {
+          "X-DataTalks-App-Key": "{{app_key}}",
+          "X-DataTalks-Device-Secret": "{{wrong_device_secret}}",
+          "X-DataTalks-SDK": "datatalks-push-ios/0.1.0-alpha"
+        },
+        "body": {
+          "events": [
+            {
+              "event_id": "3e9c6d5f-4a7b-4c8d-9e0f-0a1b2c3d4e5f",
+              "type": "open",
+              "uid": "{{uid:offer}}",
+              "occurred_at": "2026-11-04T11:30:00Z"
+            }
+          ]
+        }
+      },
+      "response": {
+        "status": 401,
+        "body": {
+          "error": {
+            "code": "device_auth_failed",
+            "message": "{{any}}"
+          }
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "path": "/v1/devices/3f1c2d4e-5a6b-4c7d-8e9f-0a1b2c3d4e5f/events",
+        "headers": {
+          "X-DataTalks-App-Key": "{{app_key}}",
+          "X-DataTalks-Device-Secret": "{{device_secret}}",
+          "X-DataTalks-SDK": "datatalks-push-ios/0.1.0-alpha"
+        },
+        "body": {
+          "events": [
+            {
+              "event_id": "3e9c6d5f-4a7b-4c8d-9e0f-0a1b2c3d4e5f",
+              "type": "open",
+              "uid": "{{uid:offer}}",
+              "occurred_at": "2026-11-04T11:30:00Z"
+            },
+            {
+              "event_id": "4fad7e6a-5b8c-4d9e-8f0a-1b2c3d4e5f6a",
+              "type": "open",
+              "uid": "{{uid:seen}}",
+              "occurred_at": "2026-11-04T10:10:00Z"
+            },
+            {
+              "event_id": "5abe8f7b-6c9d-4e0f-9a1b-2c3d4e5f6a7b",
+              "type": "delivery",
+              "uid": "{{uid:elsewhere}}",
+              "occurred_at": "2026-11-04T11:00:02Z"
+            },
+            {
+              "event_id": "6bcf9a8c-7d0e-4f1a-8b2c-3d4e5f6a7b8c",
+              "type": "delivery",
+              "uid": "6e1f8a2b-3c4d-4e5f-9a0b-1c2d3e4f5a6b",
+              "occurred_at": "2026-11-04T11:00:02Z"
+            },
+            {
+              "event_id": "7cd0ab9d-8e1f-4a2b-9c3d-4e5f6a7b8c9d",
+              "type": "open",
+              "uid": "{{uid:offer}}",
+              "occurred_at": "2026-11-04T11:30:00Z",
+              "link": "https://example.com/offer"
+            },
+            {
+              "event_id": "8de1bcae-9f2a-4b3c-8d4e-5f6a7b8c9d0e",
+              "type": "open",
+              "uid": "{{uid:early}}",
+              "occurred_at": "2026-11-04T09:00:00Z"
+            }
+          ]
+        }
+      },
+      "response": {
+        "status": 202,
+        "body": {
+          "results": [
+            { "index": 0, "result": "accepted" },
+            { "index": 1, "result": "duplicate" },
+            { "index": 2, "result": "skipped", "reason": "message_unknown" },
+            { "index": 3, "result": "skipped", "reason": "message_unknown" },
+            { "index": 4, "result": "skipped", "reason": "invalid_field", "field": "link" },
+            { "index": 5, "result": "accepted" }
+          ]
+        }
+      }
+    }
+  ]
+}

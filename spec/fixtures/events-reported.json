@@ -1,0 +1,136 @@
+{
+  "name": "events-reported",
+  "summary": "A push shown, tapped and its link followed: the delivery, the open and the click are accepted once, at the device's times. The same call again, after a lost answer, changes nothing.",
+  "app": {
+    "status": "Ready",
+    "require_verified_identity": true,
+    "platforms": {
+      "android": {
+        "transport": "fcm"
+      },
+      "ios": {
+        "transport": "apns"
+      }
+    }
+  },
+  "pushes": {
+    "match_day": {
+      "install_id": "3f1c2d4e-5a6b-4c7d-8e9f-0a1b2c3d4e5f",
+      "sent_at": "2026-11-04T11:00:00Z"
+    }
+  },
+  "steps": [
+    {
+      "request": {
+        "method": "POST",
+        "path": "/v1/devices",
+        "headers": {
+          "X-DataTalks-App-Key": "{{app_key}}",
+          "X-DataTalks-SDK": "datatalks-push-android/0.1.0-alpha"
+        },
+        "body": {
+          "install_id": "3f1c2d4e-5a6b-4c7d-8e9f-0a1b2c3d4e5f",
+          "platform": "android",
+          "fcm_token": "cXa1B2c3D4e5F6g7H8i9J0",
+          "fcm_token_type": "fcm_fid",
+          "os_permission": "authorized"
+        }
+      },
+      "response": {
+        "status": 201,
+        "body": {
+          "install_id": "3f1c2d4e-5a6b-4c7d-8e9f-0a1b2c3d4e5f",
+          "device_secret": "{{capture:device_secret}}"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "path": "/v1/devices/3f1c2d4e-5a6b-4c7d-8e9f-0a1b2c3d4e5f/events",
+        "headers": {
+          "X-DataTalks-App-Key": "{{app_key}}",
+          "X-DataTalks-Device-Secret": "{{device_secret}}",
+          "X-DataTalks-SDK": "datatalks-push-android/0.1.0-alpha"
+        },
+        "body": {
+          "events": [
+            {
+              "event_id": "0b6f3a2c-1d4e-4f5a-8b6c-7d8e9f0a1b2c",
+              "type": "delivery",
+              "uid": "{{uid:match_day}}",
+              "occurred_at": "2026-11-04T11:00:04Z"
+            },
+            {
+              "event_id": "1c7a4b3d-2e5f-4a6b-9c7d-8e9f0a1b2c3d",
+              "type": "open",
+              "uid": "{{uid:match_day}}",
+              "occurred_at": "2026-11-04T11:05:00Z"
+            },
+            {
+              "event_id": "2d8b5c4e-3f6a-4b7c-8d9e-9f0a1b2c3d4e",
+              "type": "click",
+              "uid": "{{uid:match_day}}",
+              "occurred_at": "2026-11-04T11:05:00Z",
+              "link": "https://example.com/tickets"
+            }
+          ]
+        }
+      },
+      "response": {
+        "status": 202,
+        "body": {
+          "results": [
+            { "index": 0, "result": "accepted" },
+            { "index": 1, "result": "accepted" },
+            { "index": 2, "result": "accepted" }
+          ]
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "path": "/v1/devices/3f1c2d4e-5a6b-4c7d-8e9f-0a1b2c3d4e5f/events",
+        "headers": {
+          "X-DataTalks-App-Key": "{{app_key}}",
+          "X-DataTalks-Device-Secret": "{{device_secret}}",
+          "X-DataTalks-SDK": "datatalks-push-android/0.1.0-alpha"
+        },
+        "body": {
+          "events": [
+            {
+              "event_id": "0b6f3a2c-1d4e-4f5a-8b6c-7d8e9f0a1b2c",
+              "type": "delivery",
+              "uid": "{{uid:match_day}}",
+              "occurred_at": "2026-11-04T11:00:04Z"
+            },
+            {
+              "event_id": "1c7a4b3d-2e5f-4a6b-9c7d-8e9f0a1b2c3d",
+              "type": "open",
+              "uid": "{{uid:match_day}}",
+              "occurred_at": "2026-11-04T11:05:00Z"
+            },
+            {
+              "event_id": "2d8b5c4e-3f6a-4b7c-8d9e-9f0a1b2c3d4e",
+              "type": "click",
+              "uid": "{{uid:match_day}}",
+              "occurred_at": "2026-11-04T11:05:00Z",
+              "link": "https://example.com/tickets"
+            }
+          ]
+        }
+      },
+      "response": {
+        "status": 202,
+        "body": {
+          "results": [
+            { "index": 0, "result": "duplicate" },
+            { "index": 1, "result": "duplicate" },
+            { "index": 2, "result": "duplicate" }
+          ]
+        }
+      }
+    }
+  ]
+}

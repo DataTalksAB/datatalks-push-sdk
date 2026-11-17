@@ -1,0 +1,31 @@
+{
+  "description": "Shape 4: iOS through the app's own Firebase project. The apns block carries shape 3's aps and headers.",
+  "fcm_request": {
+    "message": {
+      "token": "eFixture5678:APA91bFIXTURE-ios-registration-token-sample",
+      "data": {
+        "dt_v": "1",
+        "dt_uid": "push_8b0c6f7e2d1a4c3e",
+        "dt_title": "Match day tomorrow",
+        "dt_body": "Gates open at 17:00. Show your ticket in the app.",
+        "dt_link": "https://example.com/tickets"
+      },
+      "apns": {
+        "headers": {
+          "apns-push-type": "alert",
+          "apns-priority": "10",
+          "apns-expiration": "1767225600"
+        },
+        "payload": {
+          "aps": {
+            "alert": {
+              "title": "Match day tomorrow",
+              "body": "Gates open at 17:00. Show your ticket in the app."
+            },
+            "mutable-content": 1
+          }
+        }
+      }
+    }
+  }
+}

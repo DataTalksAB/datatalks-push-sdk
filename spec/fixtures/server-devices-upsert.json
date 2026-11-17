@@ -1,0 +1,146 @@
+{
+  "name": "server-devices-upsert",
+  "summary": "A customer backend sends tokens it already has. Bad items are skipped, never failing the batch; the same batch again updates.",
+  "app": {
+    "status": "Ready",
+    "require_verified_identity": true,
+    "platforms": {
+      "android": {
+        "transport": "fcm"
+      },
+      "ios": {
+        "transport": "apns"
+      }
+    }
+  },
+  "steps": [
+    {
+      "request": {
+        "method": "PUT",
+        "path": "/v1/server/devices",
+        "headers": {
+          "X-DataTalks-Server-Key": "{{server_key}}"
+        },
+        "body": {
+          "devices": [
+            {
+              "platform": "ios",
+              "apns_token": "a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90",
+              "external_id": "member-1001",
+              "app_version": "4.11.2"
+            },
+            {
+              "platform": "android",
+              "fcm_token": "eFixture1234:APA91bFIXTURE-registration-token-sample",
+              "email": "bo@example.com"
+            },
+            {
+              "platform": "android",
+              "external_id": "member-3003"
+            },
+            {
+              "platform": "android",
+              "fcm_token": "eFixture2345:APA91bFIXTURE-registration-token-second",
+              "apns_token": "0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c4b5a69788796a5b4c3d2e1f0"
+            },
+            {
+              "platform": "ios",
+              "apns_token": "a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90",
+              "external_id": "member-1001"
+            },
+            {
+              "platform": "android",
+              "fcm_token": "eFixture2345:APA91bFIXTURE-registration-token-second",
+              "os_permission": "sometimes"
+            },
+            "not an object"
+          ]
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "results": [
+            {
+              "index": 0,
+              "install_id": "{{uuid}}",
+              "result": "created"
+            },
+            {
+              "index": 1,
+              "install_id": "{{uuid}}",
+              "result": "created"
+            },
+            {
+              "index": 2,
+              "result": "skipped",
+              "reason": "missing_token"
+            },
+            {
+              "index": 3,
+              "result": "skipped",
+              "reason": "two_tokens"
+            },
+            {
+              "index": 4,
+              "result": "skipped",
+              "reason": "duplicate_in_batch"
+            },
+            {
+              "index": 5,
+              "result": "skipped",
+              "reason": "invalid_field",
+              "field": "os_permission"
+            },
+            {
+              "index": 6,
+              "result": "skipped",
+              "reason": "invalid_item"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "PUT",
+        "path": "/v1/server/devices",
+        "headers": {
+          "X-DataTalks-Server-Key": "{{server_key}}"
+        },
+        "body": {
+          "devices": [
+            {
+              "platform": "ios",
+              "apns_token": "a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90",
+              "external_id": "member-1001",
+              "app_version": "4.11.2"
+            },
+            {
+              "platform": "android",
+              "fcm_token": "eFixture1234:APA91bFIXTURE-registration-token-sample",
+              "email": "bo@example.com"
+            }
+          ]
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "results": [
+            {
+              "index": 0,
+              "install_id": "{{uuid}}",
+              "result": "updated"
+            },
+            {
+              "index": 1,
+              "install_id": "{{uuid}}",
+              "result": "updated"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

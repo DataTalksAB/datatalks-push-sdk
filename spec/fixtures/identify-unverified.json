@@ -1,0 +1,69 @@
+{
+  "name": "identify-unverified",
+  "summary": "The app does not require verified identity: a sign-in without a token is accepted as unverified.",
+  "app": {
+    "status": "Ready",
+    "require_verified_identity": false,
+    "platforms": {
+      "android": {
+        "transport": "fcm"
+      },
+      "ios": {
+        "transport": "apns"
+      }
+    }
+  },
+  "steps": [
+    {
+      "request": {
+        "method": "POST",
+        "path": "/v1/devices",
+        "headers": {
+          "X-DataTalks-App-Key": "{{app_key}}",
+          "X-DataTalks-SDK": "datatalks-push-android/0.1.0-alpha"
+        },
+        "body": {
+          "install_id": "3f1c2d4e-5a6b-4c7d-8e9f-0a1b2c3d4e5f",
+          "platform": "android",
+          "fcm_token": "cXa1B2c3D4e5F6g7H8i9J0",
+          "fcm_token_type": "fcm_fid",
+          "os_permission": "authorized",
+          "app_version": "4.12.0",
+          "app_build": "4120",
+          "os_version": "15",
+          "device_manufacturer": "Google",
+          "device_model": "Pixel 8",
+          "locale": "sv-SE",
+          "time_zone": "Europe/Stockholm"
+        }
+      },
+      "response": {
+        "status": 201,
+        "body": {
+          "install_id": "3f1c2d4e-5a6b-4c7d-8e9f-0a1b2c3d4e5f",
+          "device_secret": "{{capture:device_secret}}"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "path": "/v1/devices/3f1c2d4e-5a6b-4c7d-8e9f-0a1b2c3d4e5f/identify",
+        "headers": {
+          "X-DataTalks-App-Key": "{{app_key}}",
+          "X-DataTalks-SDK": "datatalks-push-android/0.1.0-alpha",
+          "X-DataTalks-Device-Secret": "{{device_secret}}"
+        },
+        "body": {
+          "email": "anna@example.com"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "identity_verified": false
+        }
+      }
+    }
+  ]
+}

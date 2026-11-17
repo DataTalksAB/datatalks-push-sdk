@@ -1,0 +1,102 @@
+{
+  "name": "server-devices-delete",
+  "summary": "Stop pushes by install id or by token; an unknown device is reported, not an error.",
+  "app": {
+    "status": "Ready",
+    "require_verified_identity": true,
+    "platforms": {
+      "android": {
+        "transport": "fcm"
+      },
+      "ios": {
+        "transport": "apns"
+      }
+    }
+  },
+  "steps": [
+    {
+      "request": {
+        "method": "PUT",
+        "path": "/v1/server/devices",
+        "headers": {
+          "X-DataTalks-Server-Key": "{{server_key}}"
+        },
+        "body": {
+          "devices": [
+            {
+              "platform": "android",
+              "install_id": "9c8b7a65-4321-4fed-8cba-0987654321fe",
+              "fcm_token": "eFixture2345:APA91bFIXTURE-registration-token-second"
+            },
+            {
+              "platform": "ios",
+              "apns_token": "0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c4b5a69788796a5b4c3d2e1f0"
+            }
+          ]
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "results": [
+            {
+              "index": 0,
+              "install_id": "9c8b7a65-4321-4fed-8cba-0987654321fe",
+              "result": "created"
+            },
+            {
+              "index": 1,
+              "install_id": "{{uuid}}",
+              "result": "created"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "path": "/v1/server/devices/delete",
+        "headers": {
+          "X-DataTalks-Server-Key": "{{server_key}}"
+        },
+        "body": {
+          "devices": [
+            {
+              "install_id": "9c8b7a65-4321-4fed-8cba-0987654321fe"
+            },
+            {
+              "platform": "ios",
+              "apns_token": "0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c4b5a69788796a5b4c3d2e1f0"
+            },
+            {
+              "install_id": "00000000-0000-4000-8000-000000000001"
+            }
+          ]
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "results": [
+            {
+              "index": 0,
+              "install_id": "9c8b7a65-4321-4fed-8cba-0987654321fe",
+              "result": "deleted"
+            },
+            {
+              "index": 1,
+              "install_id": "{{uuid}}",
+              "result": "deleted"
+            },
+            {
+              "index": 2,
+              "result": "skipped",
+              "reason": "not_found"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

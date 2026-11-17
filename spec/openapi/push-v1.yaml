@@ -1,0 +1,997 @@
+openapi: 3.1.0
+info:
+  title: Data Talks Push API
+  version: 1.1.0
+  license:
+    name: Apache-2.0
+    identifier: Apache-2.0
+  description: |
+    The API between the Data Talks push SDKs (or a customer's backend) and the Data Talks push service.
+
+    **Hosts.** Production `https://push.datatalks.se/v1`, staging `https://push.staging.datatalks.se/v1`. An SDK picks
+    the host from its app key: `dtpk_prd_…` is production, `dtpk_stg_…` staging. A key of the other environment is
+    refused with `key_wrong_environment`.
+
+    **Callers and credentials.**
+    - The SDK sends the app key (`X-DataTalks-App-Key: dtpk_{env}_{live|test}_…`) on every call, and from the first
+      registration on also the device secret it got back (`X-DataTalks-Device-Secret`).
+    - A customer's backend sends only the server key (`X-DataTalks-Server-Key: dtsk_{env}_…`) on the `/server` routes.
+      An app key is never accepted there, and a server key never on the device routes.
+    - Every call should carry `X-DataTalks-SDK`, for example `datatalks-push-android/0.5.0-beta.1` or
+      `datatalks-push-ios/0.5.0-beta.1 capacitor/0.5.0-beta.1`: the SDK and version, then optionally the wrapper and its
+      version. The ingress stores it on the device row (`sdk_name`, `sdk_version`, `sdk_wrapper`).
+
+    **Errors.** Every error answer is `{"error": {"code", "message", "detail"?, "fields"?}}`. `code` is stable and
+    meant for code; `message` is English for people and may change. 429 and 503 carry `Retry-After` (seconds).
+
+    **Limits.** Bodies: 8 KB on device routes, 1 MB on server routes (413 above). Rates (defaults): 300 requests/s per
+    app key, 30 requests/min per install and 120 requests/min per IP on device routes; 20 requests/s per server key and
+    1,200 requests/min per IP on server routes.
+
+    **SDK rules.**
+    - Retry 429 and 503 after `Retry-After`, other 5xx and network errors with exponential backoff (at most 1 hour).
+    - Never retry another 4xx unchanged (the events' 404 below aside). Never replay identify after a 401: wait for
+      the next sign-in.
+    - 409 `install_id_conflict` on registration: generate a new install id and register again.
+    - 401 `device_auth_failed`: the install is unknown or the secret is lost; drop both and register as a new install.
+    - Identity and token values never go into a URL, a log line or an analytics event.
+    - Events (`POST /devices/{install_id}/events`, version 1.1.0): an event is made once, with its own `event_id` and
+      the device's `occurred_at`, and kept until an answer says `accepted`, `duplicate` or `skipped`. Keep it on 429,
+      503, other 5xx and network errors, and on a 404, which only an ingress older than 1.1.0 answers there (back off
+      as after a 5xx). After 401 `device_auth_failed` the events of the old install can't be sent: drop them with it.
+      Drop an event 30 days after `occurred_at`. Send at most 50 per call, oldest first.
+
+    **Versioning.** This document is tagged `contract-v1.1.0` in the SDK repo. A change that adds an optional field, a
+    route or an error code is a minor version; anything else is a new major version under a new path (`/v2`). Clients
+    ignore response fields they don't know. Version 1.1.0 adds `POST /devices/{install_id}/events`, the delivery and
+    open events; `POST /server/events`, for a backend that reports them, is reserved for a later minor version.
+servers:
+  - url: https://push.datatalks.se/v1
+    description: Production
+  - url: https://push.staging.datatalks.se/v1
+    description: Staging
+tags:
+  - name: App
+    description: Settings the SDK reads at start-up.
+  - name: Devices
+    description: Calls the SDK makes for its own install, with the app key and the device secret.
+  - name: Events
+    description: What happened to a push on the device (version 1.1.0), with the app key and the device secret.
+  - name: Server
+    description: Calls a customer's backend makes with the server key, for tokens it already has.
+paths:
+  /config:
+    get:
+      tags: [App]
+      operationId: getConfig
+      summary: Read the app's push settings
+      description: Called by the SDK at start-up, before the first registration. Needs only the app key.
+      security:
+        - appKey: []
+      parameters:
+        - $ref: '#/components/parameters/Sdk'
+      responses:
+        '200':
+          description: The app's settings.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Config'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AppDisabled'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+  /devices:
+    post:
+      tags: [Devices]
+      operationId: registerDevice
+      summary: Register an install, or refresh its token, permission and metadata
+      description: |
+        The SDK calls this on first launch, on every new token (`onRegistered`/`onNewToken` on Android,
+        `didRegisterForRemoteNotificationsWithDeviceToken` on iOS), when the notification permission changes, and at
+        most once a day otherwise.
+
+        - **A new install id** creates the device: 201 with the `device_secret`, returned only this once. The SDK keeps
+          it in encrypted storage (Android Keystore, iOS Keychain) and sends it on every later call.
+        - **A known install id** needs its secret. With the right one: 200, the row is updated. Without it, or with a
+          wrong one: 409 `install_id_conflict`, and the SDK registers again under a new install id.
+
+        An `environment` that is absent keeps the stored one, and a new install is `production`. A token field that is
+        absent keeps the stored token while the install is active. An install that stopped
+        receiving pushes (its token was rejected or taken over) comes back only with a token in the request, and keeps
+        only what that request sends. Registering a token another install of the same app holds takes it over: the other
+        install stops receiving pushes. The answer never says whether the install is linked to a profile.
+      security:
+        - appKey: []
+        - appKey: []
+          deviceSecret: []
+      parameters:
+        - $ref: '#/components/parameters/Sdk'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDeviceRequest'
+      responses:
+        '200':
+          description: The install was known; its row is updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterDeviceUpdated'
+        '201':
+          description: A new install. `device_secret` is shown only in this answer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterDeviceCreated'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AppDisabled'
+        '409':
+          $ref: '#/components/responses/InstallIdConflict'
+        '413':
+          $ref: '#/components/responses/TooLarge'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+  /devices/{install_id}:
+    parameters:
+      - $ref: '#/components/parameters/InstallId'
+    delete:
+      tags: [Devices]
+      operationId: deleteDevice
+      summary: Delete the install
+      description: The device row is deleted and the secret stops working. `deleteLocalData()` in the SDK calls this.
+      security:
+        - appKey: []
+          deviceSecret: []
+      parameters:
+        - $ref: '#/components/parameters/Sdk'
+      responses:
+        '204':
+          description: Deleted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AppDisabled'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+  /devices/{install_id}/identify:
+    parameters:
+      - $ref: '#/components/parameters/InstallId'
+    post:
+      tags: [Devices]
+      operationId: identifyDevice
+      summary: Link the install to the signed-in user
+      description: |
+        Called when the user signs in. Send `external_id` and/or `email`, and the `identity_token` the customer's
+        backend signed for this user (HS256, `aud` = the app id, `sub` = the external id, optional `email`, `exp` at
+        most 600 s ahead).
+
+        - **App requires verified identity:** the token is required. Its `sub` is the external id and its `email` the
+          email; values in the body must equal the claims or be left out.
+        - **App doesn't require it:** a valid token still gives a verified link; without one the link is unverified,
+          and the device gets marketing campaigns only.
+
+        The link to a profile happens in the background, so the answer says only whether the identity counted as
+        verified. It never says whether a profile was found: that would let anyone holding the app key test which
+        emails a customer has.
+      security:
+        - appKey: []
+          deviceSecret: []
+      parameters:
+        - $ref: '#/components/parameters/Sdk'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentifyRequest'
+      responses:
+        '200':
+          description: Accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdentifyResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AppDisabled'
+        '413':
+          $ref: '#/components/responses/TooLarge'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+  /devices/{install_id}/logout:
+    parameters:
+      - $ref: '#/components/parameters/InstallId'
+    post:
+      tags: [Devices]
+      operationId: logoutDevice
+      summary: Unlink the install from its user
+      description: The install stays registered and keeps its secret; it gets no pushes for the user who signed out.
+      security:
+        - appKey: []
+          deviceSecret: []
+      parameters:
+        - $ref: '#/components/parameters/Sdk'
+      responses:
+        '204':
+          description: Unlinked (also when it wasn't linked).
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AppDisabled'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+  /devices/{install_id}/consent:
+    parameters:
+      - $ref: '#/components/parameters/InstallId'
+    put:
+      tags: [Devices]
+      operationId: setDeviceConsent
+      summary: Record the in-app marketing choice
+      description: |
+        Stores the user's in-app choice on this device. `false` keeps marketing campaigns away from it; transactional
+        pushes are not affected. For a device with a verified identity that is linked to a profile, `false` also opts
+        the profile out of marketing push in the app's brand, on all its devices, unless it already is; `true` reverts
+        only the opt-outs this route made, so an opt-out made elsewhere (an unsubscribe link, the portal) stays. A device
+        that is anonymous or unverified changes only itself.
+      security:
+        - appKey: []
+          deviceSecret: []
+      parameters:
+        - $ref: '#/components/parameters/Sdk'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentRequest'
+      responses:
+        '204':
+          description: Stored.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AppDisabled'
+        '413':
+          $ref: '#/components/responses/TooLarge'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+  /devices/{install_id}/events:
+    parameters:
+      - $ref: '#/components/parameters/InstallId'
+    post:
+      tags: [Events]
+      operationId: reportEvents
+      summary: Report what happened to pushes on this device
+      description: |
+        Version 1.1.0. The SDK reports a `delivery` when it shows a push, an `open` when the user taps it, and a `click`
+        on the same tap when the push carries a link (`dt_link`). `uid` is the push's `dt_uid`.
+
+        Each item gets its own answer, in order, and the rest of the batch goes on. Only a body that isn't this object, or
+        has no or too many items, fails with `validation_failed`.
+        - `accepted`: recorded.
+        - `duplicate`: this push already has an event of this type, from this call or an earlier one. Nothing changes.
+        - `skipped`: see `reason`. The same answer covers a push this install never got, so nothing about other devices
+          leaks.
+
+        The ingress keeps `occurred_at` within the push's send time and 31 days after it, and never later than the call.
+        An `open` of a push with no delivery yet also records its delivery, at the open's time (iOS reports no delivery
+        without the notification extension).
+
+        A `503 unavailable` means nothing in the call was recorded: send the same events again after `Retry-After`.
+      security:
+        - appKey: []
+          deviceSecret: []
+      parameters:
+        - $ref: '#/components/parameters/Sdk'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventsRequest'
+      responses:
+        '202':
+          description: Every item's answer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AppDisabled'
+        '413':
+          $ref: '#/components/responses/TooLarge'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+  /server/devices:
+    put:
+      tags: [Server]
+      operationId: upsertServerDevices
+      summary: Add or update devices from the customer's backend
+      description: |
+        For tokens the customer already has, from its own backend or another push provider. At most 500 devices
+        per call. Each item is handled on its own: an invalid item is `skipped` with a reason and never fails the
+        batch. Identities sent here count as verified, and each item with an identity also creates or updates the
+        app's user record.
+
+        An item without `install_id` gets UUIDv5(app id, token), so sending the same token again updates the same row.
+        When the app's SDK later registers the same token, it takes the row over and keeps its user. From then on the
+        item is `skipped` (`taken_over_by_sdk`), and so is an item whose `install_id` names an install of the SDK.
+      security:
+        - serverKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServerDevicesUpsertRequest'
+      responses:
+        '200':
+          description: One result per item, in the order sent.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerDevicesUpsertResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AppDisabled'
+        '413':
+          $ref: '#/components/responses/TooLarge'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+  /server/devices/delete:
+    post:
+      tags: [Server]
+      operationId: deleteServerDevices
+      summary: Stop pushes to devices, by install id or token
+      description: |
+        At most 500 items. The devices become inactive (`deleted_by_server`) and their tokens are removed. A device the
+        app's SDK manages is `skipped` (`taken_over_by_sdk`), whether it is named by its install id, its token or
+        another token of its Firebase installation: the app removes it, and the SDK would re-activate it anyway. A POST
+        rather than a DELETE with a body, because many HTTP clients and code generators drop DELETE bodies.
+      security:
+        - serverKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServerDevicesDeleteRequest'
+      responses:
+        '200':
+          description: One result per item, in the order sent.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerDevicesDeleteResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AppDisabled'
+        '413':
+          $ref: '#/components/responses/TooLarge'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+components:
+  securitySchemes:
+    appKey:
+      type: apiKey
+      in: header
+      name: X-DataTalks-App-Key
+      description: 'The publishable app key, `dtpk_{stg|prd}_{live|test}_{32 base62}`. Safe to ship inside the app.'
+    deviceSecret:
+      type: apiKey
+      in: header
+      name: X-DataTalks-Device-Secret
+      description: 'The secret returned once by the first registration, 32 base62 characters.'
+    serverKey:
+      type: apiKey
+      in: header
+      name: X-DataTalks-Server-Key
+      description: 'The secret server key, `dtsk_{stg|prd}_{32 base62}`. Only for the customer''s backend; never inside an app.'
+  parameters:
+    Sdk:
+      name: X-DataTalks-SDK
+      in: header
+      required: false
+      description: 'The SDK and version, optionally followed by a space and the wrapper and its version.'
+      schema:
+        type: string
+        maxLength: 128
+        pattern: '^[a-z0-9.-]{1,48}/[0-9A-Za-z.+-]{1,32}( [a-z0-9.-]{1,32}/[0-9A-Za-z.+-]{1,32})?$'
+      example: datatalks-push-android/0.5.0-beta.1
+    InstallId:
+      name: install_id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/InstallId'
+  responses:
+    BadRequest:
+      description: '`validation_failed` or `platform_mismatch`.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: '`key_invalid`, `key_wrong_environment`, `device_auth_failed`, `identity_token_required` or `identity_token_invalid`.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    AppDisabled:
+      description: '`app_disabled`: the app is disabled in the portal. The SDK stops calling until the next app start.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InstallIdConflict:
+      description: '`install_id_conflict`: the install id exists and the request did not prove it owns it.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    TooLarge:
+      description: '`payload_too_large`.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    RateLimited:
+      description: '`rate_limited`. Retry after `Retry-After` seconds.'
+      headers:
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unavailable:
+      description: '`unavailable`: a dependency is down. Retry after `Retry-After` seconds.'
+      headers:
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  headers:
+    RetryAfter:
+      description: Seconds to wait before the next try.
+      schema:
+        type: integer
+        minimum: 1
+  schemas:
+    InstallId:
+      type: string
+      description: |
+        A lower-case UUID. The SDK generates a version 4 UUID once per install; a server item sent without one gets
+        UUIDv5(app id, token).
+      pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+      example: 3f1c2d4e-5a6b-4c7d-8e9f-0a1b2c3d4e5f
+    Platform:
+      type: string
+      enum: [android, ios]
+    Environment:
+      type: string
+      description: |
+        The APNs environment of an iOS build: `sandbox` for development builds, `production` for App Store and
+        TestFlight builds (the SDK reads `aps-environment` from the embedded provisioning profile; none means
+        production). Android is always `production`.
+      enum: [production, sandbox]
+    OsPermission:
+      type: string
+      description: |
+        The notification permission. Android: `authorized`, `denied` or `not_determined` (Android 13+ before the
+        prompt). iOS: also `provisional` and `ephemeral`.
+      enum: [not_determined, authorized, provisional, ephemeral, denied]
+    ApnsToken:
+      type: string
+      description: The APNs device token as lower-case hex.
+      pattern: '^[0-9a-f]{64,200}$'
+    FcmToken:
+      type: string
+      description: |
+        An FCM Installation ID (FID) or registration token. A registration token `<FID>:<rest>` counts as the same device
+        as that FID and as other tokens with that prefix: an SDK install that registers one takes over a device the customer
+        imported or sent from its backend with another (keeping its user), and later backend sends of it find this install.
+        Between devices the backend sent, only the exact token moves. A token without that prefix only matches itself.
+      minLength: 1
+      maxLength: 1024
+      pattern: '^[\x21-\x7E]+$'
+    FcmTokenType:
+      type: string
+      description: |
+        `fcm_fid` for a Firebase Installation ID, `fcm_token` for a registration token. The SDK follows the app: `fcm_fid`
+        when the app turns on `firebase_messaging_installation_id_enabled`, otherwise `fcm_token`.
+      enum: [fcm_fid, fcm_token]
+    ExternalId:
+      type: string
+      description: The customer's own user id. No control characters.
+      minLength: 1
+      maxLength: 256
+    Email:
+      type: string
+      format: email
+      minLength: 3
+      maxLength: 254
+    DeviceMetadata:
+      type: object
+      description: Facts about the install, shown to the customer and usable in segments. All optional.
+      properties:
+        app_version:
+          type: string
+          maxLength: 64
+          example: 4.12.0
+        app_build:
+          type: string
+          maxLength: 64
+          example: '4120'
+        os_version:
+          type: string
+          maxLength: 64
+          example: '15'
+        device_manufacturer:
+          type: string
+          maxLength: 128
+          example: Google
+        device_model:
+          type: string
+          maxLength: 128
+          example: Pixel 8
+        locale:
+          type: string
+          description: BCP 47 language tag.
+          maxLength: 35
+          example: sv-SE
+        time_zone:
+          type: string
+          description: IANA time zone.
+          maxLength: 64
+          example: Europe/Stockholm
+    Config:
+      type: object
+      required: [require_verified_identity, platforms, refresh_after_seconds]
+      additionalProperties: false
+      properties:
+        require_verified_identity:
+          type: boolean
+          description: Identify needs an `identity_token`. SDKs log a warning in debug builds when one is missing.
+        platforms:
+          type: object
+          description: The platforms the app is set up for, each with the transport its pushes use.
+          additionalProperties: false
+          properties:
+            android:
+              $ref: '#/components/schemas/PlatformConfig'
+            ios:
+              $ref: '#/components/schemas/PlatformConfig'
+        refresh_after_seconds:
+          type: integer
+          description: How long the SDK may cache this answer.
+          minimum: 60
+    PlatformConfig:
+      type: object
+      required: [transport]
+      additionalProperties: false
+      properties:
+        transport:
+          type: string
+          description: |
+            `fcm` (Android, and iOS apps that send through their own Firebase project) or `apns` (iOS only). On iOS with
+            `fcm`, registration needs the `DataTalksPushFCM` product, which reports the FCM token instead of the APNs
+            token.
+          enum: [fcm, apns]
+    RegisterDeviceRequest:
+      allOf:
+        - $ref: '#/components/schemas/DeviceMetadata'
+        - type: object
+          required: [install_id, platform]
+          properties:
+            install_id:
+              $ref: '#/components/schemas/InstallId'
+            platform:
+              $ref: '#/components/schemas/Platform'
+            environment:
+              $ref: '#/components/schemas/Environment'
+            apns_token:
+              $ref: '#/components/schemas/ApnsToken'
+            fcm_token:
+              $ref: '#/components/schemas/FcmToken'
+            fcm_token_type:
+              $ref: '#/components/schemas/FcmTokenType'
+            os_permission:
+              $ref: '#/components/schemas/OsPermission'
+      unevaluatedProperties: false
+      description: |
+        Rules checked by the ingress, answered with `platform_mismatch`:
+        - the app must be set up for `platform`;
+        - `apns_token` only with platform `ios` and transport `apns`; `fcm_token` with transport `fcm`;
+        - `fcm_token_type` is required with `fcm_token`;
+        - `environment` other than `production` only on iOS.
+    RegisterDeviceCreated:
+      type: object
+      required: [install_id, device_secret]
+      additionalProperties: false
+      properties:
+        install_id:
+          $ref: '#/components/schemas/InstallId'
+        device_secret:
+          type: string
+          description: Shown only here. Keep it in encrypted storage and send it on every later call.
+          pattern: '^[0-9A-Za-z]{32}$'
+    RegisterDeviceUpdated:
+      type: object
+      required: [install_id]
+      additionalProperties: false
+      properties:
+        install_id:
+          $ref: '#/components/schemas/InstallId'
+    IdentifyRequest:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        external_id:
+          $ref: '#/components/schemas/ExternalId'
+        email:
+          $ref: '#/components/schemas/Email'
+        identity_token:
+          type: string
+          description: The compact JWS from the customer's backend.
+          minLength: 1
+          maxLength: 4096
+      description: At least one of `external_id`, `email` and `identity_token`.
+    IdentifyResponse:
+      type: object
+      required: [identity_verified]
+      additionalProperties: false
+      properties:
+        identity_verified:
+          type: boolean
+          description: The identity came from a valid identity token.
+    ConsentRequest:
+      type: object
+      required: [marketing_opt_in]
+      additionalProperties: false
+      properties:
+        marketing_opt_in:
+          type: boolean
+    ServerDevice:
+      allOf:
+        - $ref: '#/components/schemas/DeviceMetadata'
+        - type: object
+          required: [platform]
+          properties:
+            install_id:
+              $ref: '#/components/schemas/InstallId'
+            platform:
+              $ref: '#/components/schemas/Platform'
+            environment:
+              $ref: '#/components/schemas/Environment'
+            apns_token:
+              $ref: '#/components/schemas/ApnsToken'
+            fcm_token:
+              $ref: '#/components/schemas/FcmToken'
+            fcm_token_type:
+              $ref: '#/components/schemas/FcmTokenType'
+            external_id:
+              $ref: '#/components/schemas/ExternalId'
+            email:
+              $ref: '#/components/schemas/Email'
+            os_permission:
+              $ref: '#/components/schemas/OsPermission'
+          oneOf:
+            - required: [apns_token]
+            - required: [fcm_token]
+      unevaluatedProperties: false
+      description: |
+        Exactly one token: `apns_token` (iOS through APNs) or `fcm_token` (`fcm_token_type` defaults to `fcm_token`,
+        a registration token). `environment` defaults to `production`, `os_permission` to `authorized`.
+    ServerDevicesUpsertRequest:
+      type: object
+      required: [devices]
+      additionalProperties: false
+      description: |
+        The ingress checks each item on its own: an item that breaks `ServerDevice` is answered `skipped` with a reason,
+        and the rest of the batch goes on. Only a body that isn't this object, or has no or too many items, fails with
+        `validation_failed`.
+      properties:
+        devices:
+          type: array
+          minItems: 1
+          maxItems: 500
+          items:
+            $ref: '#/components/schemas/ServerDevice'
+    ServerDevicesUpsertResponse:
+      type: object
+      required: [results]
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServerDeviceResult'
+    ServerDeviceResult:
+      type: object
+      required: [index, result]
+      additionalProperties: false
+      properties:
+        index:
+          type: integer
+          minimum: 0
+          description: The item's position in the request.
+        install_id:
+          $ref: '#/components/schemas/InstallId'
+        result:
+          type: string
+          description: |
+            `created`, `updated` (also when nothing changed), `taken_over` (the token moved here from another device of
+            the app) or `skipped` (see `reason`).
+          enum: [created, updated, taken_over, skipped]
+        reason:
+          $ref: '#/components/schemas/SkipReason'
+        field:
+          type: string
+          description: With `invalid_field`, the item's field that failed.
+    SkipReason:
+      type: string
+      description: |
+        Why an item was skipped:
+        - `invalid_item`: not a JSON object, or one with a member name that repeats or can't be decoded;
+        - `invalid_field`: a field has the wrong type or value (see `field`);
+        - `missing_token`: neither `apns_token` nor `fcm_token`;
+        - `two_tokens`: both;
+        - `platform_mismatch`: the app isn't set up for the platform, or the token doesn't fit its transport;
+        - `duplicate_in_batch`: the same install id or token appears earlier in the batch;
+        - `taken_over_by_sdk`: (upsert and delete) an active install with the app's SDK holds this token or the FID or another
+          token of the same Firebase installation, or the item's `install_id` names an install of the SDK (on upsert active or not,
+          on delete an active one), so the SDK manages the device now: the backend can stop sending the token, and the
+          app removes the device (`logout()`, `deleteLocalData()`);
+        - `not_found`: (delete) no device has that install id or token.
+      enum: [invalid_item, invalid_field, missing_token, two_tokens, platform_mismatch, duplicate_in_batch, taken_over_by_sdk, not_found]
+    ServerDevicesDeleteRequest:
+      type: object
+      required: [devices]
+      additionalProperties: false
+      properties:
+        devices:
+          type: array
+          minItems: 1
+          maxItems: 500
+          items:
+            $ref: '#/components/schemas/ServerDeviceSelector'
+    ServerDeviceSelector:
+      description: A device by install id, or by platform and token. Checked per item, like the upsert.
+      oneOf:
+        - type: object
+          required: [install_id]
+          additionalProperties: false
+          properties:
+            install_id:
+              $ref: '#/components/schemas/InstallId'
+        - type: object
+          required: [platform, apns_token]
+          additionalProperties: false
+          properties:
+            platform:
+              $ref: '#/components/schemas/Platform'
+            apns_token:
+              $ref: '#/components/schemas/ApnsToken'
+        - type: object
+          required: [platform, fcm_token]
+          additionalProperties: false
+          properties:
+            platform:
+              $ref: '#/components/schemas/Platform'
+            fcm_token:
+              $ref: '#/components/schemas/FcmToken'
+    ServerDevicesDeleteResponse:
+      type: object
+      required: [results]
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            type: object
+            required: [index, result]
+            additionalProperties: false
+            properties:
+              index:
+                type: integer
+                minimum: 0
+              install_id:
+                $ref: '#/components/schemas/InstallId'
+              result:
+                type: string
+                enum: [deleted, skipped]
+              reason:
+                $ref: '#/components/schemas/SkipReason'
+              field:
+                type: string
+    EventsRequest:
+      type: object
+      required: [events]
+      additionalProperties: false
+      description: Up to 50 events, oldest first. An item that breaks the rules of `PushEvent` is skipped on its own.
+      properties:
+        events:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items:
+            $ref: '#/components/schemas/PushEvent'
+    PushEvent:
+      type: object
+      required: [event_id, type, uid, occurred_at]
+      additionalProperties: false
+      properties:
+        event_id:
+          type: string
+          format: uuid
+          description: Made once, when the event happens, and kept until the event is answered. For the logs; the ingress needs no id to drop repeats.
+        type:
+          type: string
+          description: |
+            `delivery`: the SDK showed the push. `open`: the user tapped it. `click`: the same tap, when the push carries a
+            link.
+          enum: [delivery, open, click]
+        uid:
+          type: string
+          minLength: 1
+          maxLength: 64
+          description: The push's `dt_uid`.
+        occurred_at:
+          type: string
+          format: date-time
+          description: When it happened, by the device's clock, in UTC (`Z`).
+          example: '2026-11-13T09:41:00Z'
+        link:
+          type: string
+          maxLength: 2048
+          description: With `click`, the push's `dt_link`. Not allowed on the other types.
+    EventsResponse:
+      type: object
+      required: [results]
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventResult'
+    EventResult:
+      type: object
+      required: [index, result]
+      additionalProperties: false
+      properties:
+        index:
+          type: integer
+          minimum: 0
+          description: The item's position in the request.
+        result:
+          type: string
+          description: '`accepted`, `duplicate` or `skipped` (see `reason`). The SDK drops the event after any of them.'
+          enum: [accepted, duplicate, skipped]
+        reason:
+          $ref: '#/components/schemas/EventSkipReason'
+        field:
+          type: string
+          description: With `invalid_field`, the item's field that failed.
+    EventSkipReason:
+      type: string
+      description: |
+        Why an event was skipped:
+        - `invalid_item`: not a JSON object, or one with a member name that repeats or can't be decoded;
+        - `invalid_field`: a field is missing or has the wrong type or value (see `field`), such as a `link` on an `open`;
+        - `message_unknown`: no push of this app was sent to this install with that `uid`.
+      enum: [invalid_item, invalid_field, message_unknown]
+    ErrorResponse:
+      type: object
+      required: [error]
+      additionalProperties: false
+      properties:
+        error:
+          $ref: '#/components/schemas/Error'
+    Error:
+      type: object
+      required: [code, message]
+      additionalProperties: false
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+        message:
+          type: string
+          description: English, for people. Never contains a key, secret, token or identity value.
+        detail:
+          type: string
+          description: |
+            With `identity_token_invalid`, why the token failed: `malformed`, `unsupported_algorithm`,
+            `unsupported_header`, `unknown_key`, `bad_signature`, `missing_expiry`, `expired`, `lifetime_too_long`,
+            `not_yet_valid`, `wrong_audience`, `missing_subject`, `invalid_subject`, `invalid_email`, or
+            `claims_mismatch` (the body's `external_id` or `email` differs from the token's).
+        fields:
+          type: array
+          description: With `validation_failed`, the fields that failed.
+          items:
+            type: object
+            required: [field, problem]
+            additionalProperties: false
+            properties:
+              field:
+                type: string
+              problem:
+                type: string
+                enum: [required, invalid, too_long, not_allowed]
+    ErrorCode:
+      type: string
+      description: |
+        | Code | Status | Meaning |
+        |---|---|---|
+        | `validation_failed` | 400 | The body is malformed or a field is invalid (`fields`) |
+        | `platform_mismatch` | 400 | The app isn't set up for the platform, or the token doesn't fit its transport |
+        | `key_invalid` | 401 | The key header is missing, malformed, unknown or revoked, or the wrong kind for the route |
+        | `key_wrong_environment` | 401 | A production key on staging or the other way round |
+        | `device_auth_failed` | 401 | Unknown install, or a missing or wrong device secret (the same answer for all three) |
+        | `identity_token_required` | 401 | The app requires verified identity and no token was sent |
+        | `identity_token_invalid` | 401 | The token failed (`detail`) |
+        | `app_disabled` | 403 | The app is disabled |
+        | `install_id_conflict` | 409 | Registration of an existing install id without its secret, or with a wrong one |
+        | `payload_too_large` | 413 | The body is over the limit |
+        | `rate_limited` | 429 | Too many requests (`Retry-After`) |
+        | `unavailable` | 503 | A dependency is down (`Retry-After`) |
+        | `internal_error` | 500 | Unexpected; retry with backoff |
+      enum:
+        - validation_failed
+        - platform_mismatch
+        - key_invalid
+        - key_wrong_environment
+        - device_auth_failed
+        - identity_token_required
+        - identity_token_invalid
+        - app_disabled
+        - install_id_conflict
+        - payload_too_large
+        - rate_limited
+        - unavailable
+        - internal_error

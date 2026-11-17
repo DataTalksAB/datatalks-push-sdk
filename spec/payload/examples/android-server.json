@@ -1,0 +1,31 @@
+{
+  "description": "Shape 2: Android, source = server or csv. The notification block lets Android show it without the SDK.",
+  "fcm_request": {
+    "message": {
+      "token": "eFixture1234:APA91bFIXTURE-registration-token-sample",
+      "notification": {
+        "title": "Match day tomorrow",
+        "body": "Gates open at 17:00. Show your ticket in the app.",
+        "image": "https://cdn.example.com/push/matchday.jpg"
+      },
+      "data": {
+        "dt_v": "1",
+        "dt_uid": "push_8b0c6f7e2d1a4c3c",
+        "dt_title": "Match day tomorrow",
+        "dt_body": "Gates open at 17:00. Show your ticket in the app.",
+        "dt_image": "https://cdn.example.com/push/matchday.jpg",
+        "dt_link": "https://example.com/tickets",
+        "dt_color": "#F35625",
+        "dt_large_icon": "https://cdn.example.com/push/club-logo.png"
+      },
+      "android": {
+        "priority": "HIGH",
+        "ttl": "2419200s",
+        "notification": {
+          "channel_id": "datatalks_default",
+          "color": "#F35625"
+        }
+      }
+    }
+  }
+}

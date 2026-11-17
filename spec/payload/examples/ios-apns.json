@@ -1,0 +1,27 @@
+{
+  "description": "Shape 3: iOS through APNs. HTTP/2 POST /3/device/{token}; the dt_* keys sit next to aps.",
+  "apns_headers": {
+    "apns-push-type": "alert",
+    "apns-priority": "10",
+    "apns-topic": "se.example.app",
+    "apns-expiration": "1767225600",
+    "apns-collapse-id": "matchday"
+  },
+  "apns_body": {
+    "aps": {
+      "alert": {
+        "title": "Match day tomorrow",
+        "body": "Gates open at 17:00. Show your ticket in the app."
+      },
+      "mutable-content": 1,
+      "thread-id": "matchday"
+    },
+    "dt_v": "1",
+    "dt_uid": "push_8b0c6f7e2d1a4c3d",
+    "dt_title": "Match day tomorrow",
+    "dt_body": "Gates open at 17:00. Show your ticket in the app.",
+    "dt_image": "https://cdn.example.com/push/matchday.jpg",
+    "dt_link": "https://example.com/tickets",
+    "dt_thread": "matchday"
+  }
+}

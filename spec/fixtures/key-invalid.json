@@ -1,0 +1,100 @@
+{
+  "name": "key-invalid",
+  "summary": "A missing key, a revoked key, a server key on a device route and an app key on a server route.",
+  "app": {
+    "status": "Ready",
+    "require_verified_identity": true,
+    "platforms": {
+      "android": {
+        "transport": "fcm"
+      },
+      "ios": {
+        "transport": "apns"
+      }
+    }
+  },
+  "steps": [
+    {
+      "request": {
+        "method": "GET",
+        "path": "/v1/config",
+        "headers": {
+          "X-DataTalks-SDK": "datatalks-push-android/0.1.0-alpha"
+        }
+      },
+      "response": {
+        "status": 401,
+        "body": {
+          "error": {
+            "code": "key_invalid",
+            "message": "{{any}}"
+          }
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "path": "/v1/config",
+        "headers": {
+          "X-DataTalks-App-Key": "{{app_key:revoked}}",
+          "X-DataTalks-SDK": "datatalks-push-android/0.1.0-alpha"
+        }
+      },
+      "response": {
+        "status": 401,
+        "body": {
+          "error": {
+            "code": "key_invalid",
+            "message": "{{any}}"
+          }
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "path": "/v1/config",
+        "headers": {
+          "X-DataTalks-App-Key": "{{server_key}}",
+          "X-DataTalks-SDK": "datatalks-push-android/0.1.0-alpha"
+        }
+      },
+      "response": {
+        "status": 401,
+        "body": {
+          "error": {
+            "code": "key_invalid",
+            "message": "{{any}}"
+          }
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "PUT",
+        "path": "/v1/server/devices",
+        "headers": {
+          "X-DataTalks-Server-Key": "{{app_key}}"
+        },
+        "body": {
+          "devices": [
+            {
+              "platform": "android",
+              "fcm_token": "eFixture1234:APA91bFIXTURE-registration-token-sample"
+            }
+          ]
+        }
+      },
+      "response": {
+        "status": 401,
+        "body": {
+          "error": {
+            "code": "key_invalid",
+            "message": "{{any}}"
+          }
+        }
+      }
+    }
+  ]
+}

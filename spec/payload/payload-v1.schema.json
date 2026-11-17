@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://push.datatalks.se/contract/payload-v1.schema.json",
+  "title": "Data Talks push payload keys, version 1",
+  "description": "The dt_* map: FCM message data on Android (and iOS through FCM), top-level keys next to aps on iOS through APNs. See payload-v1.md.",
+  "type": "object",
+  "required": ["dt_v", "dt_uid"],
+  "anyOf": [
+    { "required": ["dt_title"] },
+    { "required": ["dt_body"] }
+  ],
+  "properties": {
+    "dt_v": { "const": "1" },
+    "dt_uid": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[\\x21-\\x7E]+$" },
+    "dt_title": { "type": "string", "minLength": 1 },
+    "dt_body": { "type": "string", "minLength": 1 },
+    "dt_image": { "type": "string", "pattern": "^https://[^\\s]+$", "maxLength": 2048 },
+    "dt_link": { "type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9+.-]*://[^\\s]+$", "maxLength": 2048 },
+    "dt_data": {
+      "type": "string",
+      "description": "A JSON object serialised as a string, at most 1024 bytes in UTF-8.",
+      "maxLength": 1024,
+      "contentMediaType": "application/json",
+      "contentSchema": { "type": "object" }
+    },
+    "dt_channel": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "dt_sound": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "dt_badge": { "type": "string", "pattern": "^(0|[1-9][0-9]{0,5})$" },
+    "dt_collapse": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "dt_thread": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "dt_color": { "type": "string", "description": "Android only: the accent colour.", "pattern": "^#[0-9A-Fa-f]{6}$" },
+    "dt_large_icon": { "type": "string", "description": "Android only: the large icon, a square PNG or JPEG.", "pattern": "^https://[^\\s]+$", "maxLength": 2048 }
+  },
+  "patternProperties": {
+    "^dt_": { "type": "string" }
+  }
+}

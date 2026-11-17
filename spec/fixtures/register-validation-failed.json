@@ -1,0 +1,54 @@
+{
+  "name": "register-validation-failed",
+  "summary": "A malformed install id and an unknown permission value.",
+  "app": {
+    "status": "Ready",
+    "require_verified_identity": true,
+    "platforms": {
+      "android": {
+        "transport": "fcm"
+      },
+      "ios": {
+        "transport": "apns"
+      }
+    }
+  },
+  "steps": [
+    {
+      "request": {
+        "method": "POST",
+        "path": "/v1/devices",
+        "headers": {
+          "X-DataTalks-App-Key": "{{app_key}}",
+          "X-DataTalks-SDK": "datatalks-push-android/0.1.0-alpha"
+        },
+        "body": {
+          "install_id": "ABC",
+          "platform": "android",
+          "fcm_token": "cXa1B2c3D4e5F6g7H8i9J0",
+          "fcm_token_type": "fcm_fid",
+          "os_permission": "maybe"
+        }
+      },
+      "response": {
+        "status": 400,
+        "body": {
+          "error": {
+            "code": "validation_failed",
+            "message": "{{any}}",
+            "fields": [
+              {
+                "field": "install_id",
+                "problem": "invalid"
+              },
+              {
+                "field": "os_permission",
+                "problem": "invalid"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

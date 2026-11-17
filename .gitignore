@@ -1,0 +1,36 @@
+.gradle/
+.kotlin/
+build/
+.build/
+local.properties
+*.iml
+.idea/
+captures/
+.swiftpm/
+.derived/
+xcuserdata/
+bin/
+obj/
+sdks/maui/native/artifacts/
+sdks/maui/native/.archives/
+
+# Capacitor: the build, and the native SDKs that scripts/vendor-native.mjs copies in.
+node_modules/
+sdks/capacitor/dist/
+sdks/capacitor/samples/ionic-react/dist/
+sdks/capacitor/android/maven/
+sdks/capacitor/ios/Sources/DataTalksPushPlugin/Core/
+sdks/capacitor/ios/Extension/
+*.tgz
+
+# A customer's or a developer's own Firebase project.
+google-services.json
+GoogleService-Info.plist
+
+# Signing and push keys.
+*.p8
+*.p12
+*.pem
+*.mobileprovision
+
+.DS_Store

@@ -1,0 +1,37 @@
+{
+  "name": "app-disabled",
+  "summary": "Every route answers 403 for a disabled app.",
+  "app": {
+    "status": "Disabled",
+    "require_verified_identity": true,
+    "platforms": {
+      "android": {
+        "transport": "fcm"
+      },
+      "ios": {
+        "transport": "apns"
+      }
+    }
+  },
+  "steps": [
+    {
+      "request": {
+        "method": "GET",
+        "path": "/v1/config",
+        "headers": {
+          "X-DataTalks-App-Key": "{{app_key}}",
+          "X-DataTalks-SDK": "datatalks-push-android/0.1.0-alpha"
+        }
+      },
+      "response": {
+        "status": 403,
+        "body": {
+          "error": {
+            "code": "app_disabled",
+            "message": "{{any}}"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "description": "Shape 1: Android, source = sdk. FCM HTTP v1 request body; data-only, rendered by the SDK.",
+  "fcm_request": {
+    "message": {
+      "fid": "cXa1B2c3D4e5F6g7H8i9J0",
+      "data": {
+        "dt_v": "1",
+        "dt_uid": "push_8b0c6f7e2d1a4c3b",
+        "dt_title": "Match day tomorrow",
+        "dt_body": "Gates open at 17:00. Show your ticket in the app.",
+        "dt_image": "https://cdn.example.com/push/matchday.jpg",
+        "dt_link": "https://example.com/tickets",
+        "dt_data": "{\"ticket_id\":\"T-1042\"}",
+        "dt_collapse": "matchday",
+        "dt_color": "#F35625",
+        "dt_large_icon": "https://cdn.example.com/push/club-logo.png"
+      },
+      "android": {
+        "priority": "HIGH",
+        "ttl": "2419200s",
+        "collapse_key": "matchday"
+      }
+    }
+  }
+}
