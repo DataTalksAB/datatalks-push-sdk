@@ -1,0 +1,57 @@
+{
+  "name": "@datatalks/push-capacitor",
+  "version": "0.5.0-beta.1",
+  "description": "Data Talks push notifications for Capacitor apps, over the native Android and iOS SDKs.",
+  "main": "dist/plugin.cjs.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "unpkg": "dist/plugin.js",
+  "files": [
+    "android/src/main/",
+    "android/build.gradle",
+    "android/maven/",
+    "!android/maven/**/*-javadoc.jar*",
+    "dist/",
+    "ios/Sources/",
+    "ios/Extension/",
+    "Package.swift",
+    "DatatalksPushCapacitor.podspec",
+    "DatatalksPushExtension.podspec"
+  ],
+  "author": "Data Talks",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DataTalksTeam/datatalks-push-sdk.git"
+  },
+  "keywords": [
+    "capacitor",
+    "plugin",
+    "native",
+    "push"
+  ],
+  "scripts": {
+    "vendor": "node scripts/vendor-native.mjs",
+    "build": "node scripts/clean.mjs && tsc && rollup -c rollup.config.mjs",
+    "prepack": "npm run vendor && npm run build"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/cli": "^6.0.0",
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/ios": "^6.0.0",
+    "rollup": "^4.24.0",
+    "typescript": "~5.6.3"
+  },
+  "peerDependencies": {
+    "@capacitor/core": ">=6.0.0 <9.0.0"
+  },
+  "capacitor": {
+    "ios": {
+      "src": "ios"
+    },
+    "android": {
+      "src": "android"
+    }
+  }
+}

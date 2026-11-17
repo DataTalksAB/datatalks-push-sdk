@@ -1,0 +1,2 @@
+<!-- Nothing of its own: the SDK's manifest brings the messaging service and its activities. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" />

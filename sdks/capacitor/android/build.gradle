@@ -1,0 +1,48 @@
+ext {
+    // The Android SDK this plugin wraps, bundled in this package's maven/ so the plugin always ships the SDK it was built
+    // with. The same version as in the SDK's gradle.properties, which scripts/vendor-native.mjs checks.
+    dataTalksPushVersion = '0.5.0-beta.1'
+    androidxAppCompatVersion = project.hasProperty('androidxAppCompatVersion') ? rootProject.ext.androidxAppCompatVersion : '1.6.1'
+}
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.2.1'
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    namespace "se.datatalks.push.capacitor"
+    compileSdk project.hasProperty('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 34
+    defaultConfig {
+        // The SDK needs 23 (Firebase Messaging 25 and the Keystore). An app below it fails the manifest merge, which says so.
+        minSdkVersion project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 23
+        targetSdkVersion project.hasProperty('targetSdkVersion') ? rootProject.ext.targetSdkVersion : 34
+    }
+    lint {
+        abortOnError false
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+repositories {
+    google()
+    mavenCentral()
+    maven { url "$projectDir/maven" }
+}
+
+dependencies {
+    implementation project(':capacitor-android')
+    // Capacitor's getActivity() is an AppCompatActivity.
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "se.datatalks:push-android:$dataTalksPushVersion"
+}
