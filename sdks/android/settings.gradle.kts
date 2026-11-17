@@ -17,3 +17,4 @@ dependencyResolutionManagement {
 rootProject.name = "datatalks-push-android"
 
 include(":push")
+include(":samples:compose")

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Cleartext only so the sample can reach a local ingress at http://10.0.2.2 from an emulator. -->
+    <application
+        android:name=".SampleApplication"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="DT Native"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:theme="@android:style/Theme.Material.Light.NoActionBar"
+        android:usesCleartextTraffic="true">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="firebase_messaging_installation_id_enabled"
+            android:value="${fidMode}" />
+
+        <meta-data
+            android:name="se.datatalks.push.notification_icon"
+            android:resource="@drawable/ic_stat_datatalks" />
+
+        <meta-data
+            android:name="se.datatalks.push.notification_color"
+            android:resource="@color/datatalks_orange" />
+    </application>
+</manifest>
