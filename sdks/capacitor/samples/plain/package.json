@@ -1,0 +1,15 @@
+{
+  "name": "datatalks-push-capacitor-example",
+  "private": true,
+  "version": "0.0.0",
+  "description": "DT Capacitor, the Data Talks sandbox demo: a Capacitor 6 app with the plugin (compileSdk 34, minSdk 23, iOS 15 for Xcode 27).",
+  "dependencies": {
+    "@capacitor/android": "^6.2.1",
+    "@capacitor/core": "^6.2.1",
+    "@capacitor/ios": "^6.2.1",
+    "@datatalks/push-capacitor": "file:../.."
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.2.1"
+  }
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AppTheme reads these: the status bar is indigo, like the page's header. -->
+    <color name="colorPrimary">#F35625</color>
+    <color name="colorPrimaryDark">#1F1451</color>
+    <color name="colorAccent">#F35625</color>
+    <!-- The colour of the notifications the SDK shows. -->
+    <color name="datatalks_orange">#F35625</color>
+</resources>

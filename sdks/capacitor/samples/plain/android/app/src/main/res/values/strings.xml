@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">DT Capacitor</string>
+    <string name="title_activity_main">DT Capacitor</string>
+    <string name="package_name">se.datatalks.sandbox.capacitor</string>
+    <string name="custom_url_scheme">se.datatalks.sandbox.capacitor</string>
+</resources>

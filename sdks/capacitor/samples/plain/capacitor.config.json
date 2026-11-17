@@ -1,0 +1,11 @@
+{
+  "appId": "se.datatalks.sandbox.capacitor",
+  "appName": "DT Capacitor",
+  "webDir": "www",
+  "plugins": {
+    "DataTalksPush": {
+      "appKey": "",
+      "openLinks": false
+    }
+  }
+}

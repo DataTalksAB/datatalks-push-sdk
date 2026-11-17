@@ -1,0 +1,132 @@
+/* Data Talks' colours on Ionic's variables, and the sandbox demos' layout. */
+:root {
+  --ion-color-primary: #f35625;
+  --ion-color-primary-rgb: 243, 86, 37;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #e14715;
+  --ion-color-primary-tint: #f4673b;
+  --ion-background-color: #eef1f8;
+  --ion-text-color: #181c32;
+  --dt-indigo: #1f1451;
+  --dt-muted: #5e6278;
+  --dt-border: #dde1ec;
+}
+
+ion-toolbar.brand {
+  --background: var(--dt-indigo);
+  --color: #ffffff;
+  --border-width: 0;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 14px;
+  --padding-bottom: 14px;
+}
+
+ion-toolbar.brand ion-back-button {
+  --color: #ffffff;
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-row .mark {
+  width: 40px;
+  height: 40px;
+  flex: none;
+}
+
+.brand-row .titles {
+  flex: 1;
+}
+
+.brand-row h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.brand-row p {
+  margin: 2px 0 0;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.badge {
+  background: #ffffff;
+  color: var(--dt-indigo);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+ion-content.sandbox {
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.card h2 {
+  margin: 0;
+  color: var(--dt-indigo);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.hint {
+  margin: 0;
+  color: var(--dt-muted);
+  font-size: 13px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.row ion-button {
+  margin: 0;
+  font-weight: 600;
+  text-transform: none;
+}
+
+ion-input.field {
+  --padding-start: 12px;
+  --padding-end: 12px;
+  border: 1px solid var(--dt-border);
+  border-radius: 8px;
+}
+
+ion-item.toggle {
+  --background: transparent;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+}
+
+.events {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  word-break: break-word;
+}

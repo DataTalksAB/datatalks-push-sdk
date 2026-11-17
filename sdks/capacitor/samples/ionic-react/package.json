@@ -1,0 +1,35 @@
+{
+  "name": "datatalks-push-ionic-example",
+  "private": true,
+  "version": "0.0.0",
+  "description": "DT Ionic, the Data Talks sandbox demo on Ionic 6 with React 18 and Capacitor 6, using the code of guide-ionic-react.md.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.1",
+    "@capacitor/core": "^6.2.1",
+    "@capacitor/ios": "^6.2.1",
+    "@datatalks/push-capacitor": "file:../..",
+    "@ionic/react": "^6.7.5",
+    "@ionic/react-router": "^6.7.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router": "^5.3.4",
+    "react-router-dom": "^5.3.4"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.2.1",
+    "@types/react": "18.2.7",
+    "@types/react-dom": "18.2.4",
+    "@types/react-router-dom": "^5.3.3",
+    "@vitejs/plugin-react": "^4.7.0",
+    "typescript": "~5.6.3",
+    "vite": "^5.4.21"
+  },
+  "overrides": {
+    "@types/react": "18.2.7"
+  }
+}
