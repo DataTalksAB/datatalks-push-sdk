@@ -1,0 +1,16 @@
+<Project>
+
+  <!-- One version and one set of package metadata for the three packages that ship together: the two bindings and the
+       wrapper. Only those three are packable. -->
+  <PropertyGroup>
+    <Version>0.5.0-beta.1</Version>
+    <Authors>Data Talks</Authors>
+    <Company>Data Talks</Company>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/DataTalksTeam/datatalks-push-sdk</RepositoryUrl>
+    <PackageProjectUrl>https://datatalks.se</PackageProjectUrl>
+    <PackageTags>datatalks;push;notifications;maui</PackageTags>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+</Project>

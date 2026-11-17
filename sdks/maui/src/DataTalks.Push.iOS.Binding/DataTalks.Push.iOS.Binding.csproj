@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- The C# surface of the iOS bridge framework, which sdks/maui/build-native.sh builds on a Mac. This project builds wherever
+       the framework is in native/artifacts, including on Windows with a copy from a Mac. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0-ios</TargetFramework>
+    <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
+    <IsBindingProject>true</IsBindingProject>
+    <NoBindingEmbedding>true</NoBindingEmbedding>
+    <Nullable>enable</Nullable>
+    <IsPackable>true</IsPackable>
+    <PackageId>DataTalks.Push.iOS.Binding</PackageId>
+    <Description>The Data Talks iOS push SDK for .NET, which DataTalks.Push.Maui wraps. Use DataTalks.Push.Maui rather than this.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ObjcBindingApiDefinition Include="ApiDefinition.cs" />
+    <NativeReference Include="..\..\native\artifacts\DataTalksPushBridge.xcframework">
+      <Kind>Framework</Kind>
+      <SmartLink>False</SmartLink>
+      <Frameworks>Foundation UserNotifications UIKit Security</Frameworks>
+    </NativeReference>
+  </ItemGroup>
+
+</Project>

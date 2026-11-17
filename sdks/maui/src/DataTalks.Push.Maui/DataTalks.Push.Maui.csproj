@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- iOS is always targeted on a Mac. Elsewhere it is targeted once the framework from sdks/maui/build-native.sh exists:
+       building the framework needs a Mac, packing the binding with it doesn't, so a copy from a Mac packs both platforms on
+       Windows. -->
+  <PropertyGroup>
+    <TargetFrameworks>net10.0-android</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('osx')) Or Exists('$(MSBuildThisFileDirectory)..\..\native\artifacts\DataTalksPushBridge.xcframework')">net10.0-android;net10.0-ios</TargetFrameworks>
+    <!-- Only the host and the platform helpers: the app chooses its own version of the MAUI controls. -->
+    <UseMauiCore>true</UseMauiCore>
+    <UseMauiEssentials>true</UseMauiEssentials>
+    <SingleProject>true</SingleProject>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">23.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+    <IsPackable>true</IsPackable>
+    <PackageId>DataTalks.Push.Maui</PackageId>
+    <Description>Data Talks push notifications for .NET MAUI, over the native Android and iOS SDKs.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Maui.Core" Version="10.0.71" />
+    <PackageReference Include="Microsoft.Maui.Essentials" Version="10.0.71" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+    <ProjectReference Include="..\DataTalks.Push.Android.Binding\DataTalks.Push.Android.Binding.csproj" />
+    <Compile Remove="Platforms\iOS\**" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
+    <ProjectReference Include="..\DataTalks.Push.iOS.Binding\DataTalks.Push.iOS.Binding.csproj" />
+    <Compile Remove="Platforms\Android\**" />
+  </ItemGroup>
+
+</Project>

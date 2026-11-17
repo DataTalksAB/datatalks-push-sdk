@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- The C# surface of se.datatalks:push-android. Build the library first: sdks/maui/build-native.sh. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0-android</TargetFramework>
+    <SupportedOSPlatformVersion>23</SupportedOSPlatformVersion>
+    <Nullable>enable</Nullable>
+    <!-- BG8605 and BG8606 are about Kotlin's synthetic classes behind the internals that Metadata.xml removes. -->
+    <NoWarn>$(NoWarn);BG8605;BG8606</NoWarn>
+    <IsPackable>true</IsPackable>
+    <PackageId>DataTalks.Push.Android.Binding</PackageId>
+    <Description>The Data Talks Android push SDK for .NET, which DataTalks.Push.Maui wraps. Use DataTalks.Push.Maui rather than this.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AndroidLibrary Include="..\..\native\artifacts\push-release.aar" />
+    <PackageReference Include="Xamarin.Firebase.Messaging" Version="125.1.3" />
+    <PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.11.2.1" />
+
+    <!-- MAUI brings older versions of these, which don't fit the AndroidX that Firebase needs. -->
+    <PackageReference Include="Xamarin.AndroidX.Collection.Ktx" Version="1.6.0.1" />
+    <PackageReference Include="Xamarin.AndroidX.Fragment.Ktx" Version="1.9.0" />
+    <PackageReference Include="Xamarin.AndroidX.Lifecycle.Process" Version="2.11.0.1" />
+    <PackageReference Include="Xamarin.AndroidX.Tracing.Tracing.Ktx" Version="2.0.0" />
+  </ItemGroup>
+
+</Project>

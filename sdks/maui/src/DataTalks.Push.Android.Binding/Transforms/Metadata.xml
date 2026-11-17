@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <!-- Only the SDK's public API. Kotlin's internal classes are public in the bytecode. -->
+  <remove-node path="/api/package[@name='se.datatalks.push.internal']" />
+  <remove-node path="/api/package[@name='se.datatalks.push']/class[@name='BuildConfig']" />
+
+  <attr path="/api/package[@name='se.datatalks.push']" name="managedName">DataTalks.Push.Android</attr>
+
+  <!-- A static method: no C# event to generate from it. -->
+  <attr path="/api/package[@name='se.datatalks.push']/class[@name='DataTalksPush']/method[@name='setListener']" name="eventName"></attr>
+</metadata>
