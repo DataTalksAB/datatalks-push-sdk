@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net10.0-android</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('osx'))">net10.0-android;net10.0-ios</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationTitle>DT MAUI</ApplicationTitle>
+    <!-- The sandbox demo's own id on both platforms, so it installs next to the other demos. The Firebase project needs an
+         Android app with this id, and the push app in the portal the same package and bundle id. -->
+    <ApplicationId>se.datatalks.sandbox.maui</ApplicationId>
+    <ApplicationDisplayVersion>0.1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">23.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+  </PropertyGroup>
+
+  <!-- MAUI uses Platforms/iOS/Entitlements.plist for every iOS build: the push entitlement, and the Keychain group the SDK
+       stores its install in (without it, a simulator build can't use the Keychain). Device builds and publishes are signed
+       with your team's profile; anything else is a simulator build, signed ad hoc, which needs no profile and still gets a
+       real APNs token. The iOS workload picks its default runtime identifier only after this file is evaluated, so a device
+       build must pass -p:RuntimeIdentifier=ios-arm64 (or -r ios-arm64). -->
+  <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' AND '$(RuntimeIdentifier)' != 'ios-arm64' AND '$(_IsPublishing)' != 'true'">
+    <CodesignKey>-</CodesignKey>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- tools/sample-icons/render.ps1 writes appiconfg.png. -->
+    <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.png" ForegroundScale="1" Color="#1F1451" />
+    <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#1F1451" BaseSize="96,96" />
+    <MauiImage Include="Resources\Images\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+    <ProjectReference Include="..\..\src\DataTalks.Push.Maui\DataTalks.Push.Maui.csproj" />
+  </ItemGroup>
+
+  <!-- Your Firebase project's file stays out of git. Without it the demo still builds, and registering logs why it fails. -->
+  <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' AND Exists('google-services.json')">
+    <GoogleServicesJson Include="google-services.json" />
+  </ItemGroup>
+
+</Project>

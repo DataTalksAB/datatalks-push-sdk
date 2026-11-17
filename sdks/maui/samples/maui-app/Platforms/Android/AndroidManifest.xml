@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Cleartext only so the demo can reach a local ingress at http://10.0.2.2 from an emulator. -->
+    <!-- MAUI makes the icons from the MauiIcon item, as appicon and appicon_round. -->
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/appicon"
+        android:roundIcon="@mipmap/appicon_round"
+        android:usesCleartextTraffic="true">
+        <meta-data
+            android:name="se.datatalks.push.notification_icon"
+            android:resource="@drawable/ic_stat_datatalks" />
+        <meta-data
+            android:name="se.datatalks.push.notification_color"
+            android:resource="@color/datatalks_orange" />
+    </application>
+</manifest>
