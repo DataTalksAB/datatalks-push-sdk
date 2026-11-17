@@ -1,0 +1,497 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D7A000000000000000000001 /* DataTalksPush in Frameworks */ = {isa = PBXBuildFile; productRef = D7A000000000000000000002 /* DataTalksPush */; };
+		D7A000000000000000000050 /* DataTalksPushExtension in Frameworks */ = {isa = PBXBuildFile; productRef = D7A000000000000000000051 /* DataTalksPushExtension */; };
+		D7A000000000000000000052 /* NotificationService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D7A000000000000000000053 /* NotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D7A000000000000000000003 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D7A000000000000000000010 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D7A000000000000000000011;
+			remoteInfo = DataTalksPushSample;
+		};
+		D7A000000000000000000054 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D7A000000000000000000010 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D7A000000000000000000055;
+			remoteInfo = NotificationService;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D7A000000000000000000056 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				D7A000000000000000000052 /* NotificationService.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		D7A000000000000000000012 /* DataTalksPushSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DataTalksPushSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D7A000000000000000000013 /* DataTalksPushSampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DataTalksPushSampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D7A000000000000000000014 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D7A000000000000000000015 /* DataTalksPushSample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DataTalksPushSample.entitlements; sourceTree = "<group>"; };
+		D7A000000000000000000053 /* NotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		D7A000000000000000000057 /* NotificationService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NotificationService-Info.plist"; sourceTree = "<group>"; };
+		D7A000000000000000000058 /* NotificationService.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NotificationService.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		D7A000000000000000000016 /* DataTalksPushSample */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = DataTalksPushSample;
+			sourceTree = "<group>";
+		};
+		D7A000000000000000000017 /* DataTalksPushSampleUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = DataTalksPushSampleUITests;
+			sourceTree = "<group>";
+		};
+		D7A000000000000000000059 /* NotificationService */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = NotificationService;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D7A000000000000000000018 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D7A000000000000000000001 /* DataTalksPush in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D7A000000000000000000019 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D7A00000000000000000005A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D7A000000000000000000050 /* DataTalksPushExtension in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D7A000000000000000000020 = {
+			isa = PBXGroup;
+			children = (
+				D7A000000000000000000016 /* DataTalksPushSample */,
+				D7A000000000000000000017 /* DataTalksPushSampleUITests */,
+				D7A000000000000000000059 /* NotificationService */,
+				D7A000000000000000000014 /* Info.plist */,
+				D7A000000000000000000015 /* DataTalksPushSample.entitlements */,
+				D7A000000000000000000057 /* NotificationService-Info.plist */,
+				D7A000000000000000000058 /* NotificationService.entitlements */,
+				D7A000000000000000000021 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D7A000000000000000000021 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D7A000000000000000000012 /* DataTalksPushSample.app */,
+				D7A000000000000000000013 /* DataTalksPushSampleUITests.xctest */,
+				D7A000000000000000000053 /* NotificationService.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D7A000000000000000000011 /* DataTalksPushSample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D7A000000000000000000032 /* Build configuration list for PBXNativeTarget "DataTalksPushSample" */;
+			buildPhases = (
+				D7A000000000000000000022 /* Sources */,
+				D7A000000000000000000018 /* Frameworks */,
+				D7A000000000000000000023 /* Resources */,
+				D7A000000000000000000056 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D7A00000000000000000005E /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				D7A000000000000000000016 /* DataTalksPushSample */,
+			);
+			name = DataTalksPushSample;
+			packageProductDependencies = (
+				D7A000000000000000000002 /* DataTalksPush */,
+			);
+			productName = DataTalksPushSample;
+			productReference = D7A000000000000000000012 /* DataTalksPushSample.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D7A000000000000000000024 /* DataTalksPushSampleUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D7A000000000000000000033 /* Build configuration list for PBXNativeTarget "DataTalksPushSampleUITests" */;
+			buildPhases = (
+				D7A000000000000000000025 /* Sources */,
+				D7A000000000000000000019 /* Frameworks */,
+				D7A000000000000000000026 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D7A000000000000000000027 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				D7A000000000000000000017 /* DataTalksPushSampleUITests */,
+			);
+			name = DataTalksPushSampleUITests;
+			productName = DataTalksPushSampleUITests;
+			productReference = D7A000000000000000000013 /* DataTalksPushSampleUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		D7A000000000000000000055 /* NotificationService */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D7A00000000000000000005B /* Build configuration list for PBXNativeTarget "NotificationService" */;
+			buildPhases = (
+				D7A00000000000000000005C /* Sources */,
+				D7A00000000000000000005A /* Frameworks */,
+				D7A00000000000000000005D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				D7A000000000000000000059 /* NotificationService */,
+			);
+			name = NotificationService;
+			packageProductDependencies = (
+				D7A000000000000000000051 /* DataTalksPushExtension */,
+			);
+			productName = NotificationService;
+			productReference = D7A000000000000000000053 /* NotificationService.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D7A000000000000000000010 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2700;
+				LastUpgradeCheck = 2700;
+				TargetAttributes = {
+					D7A000000000000000000024 = {
+						TestTargetID = D7A000000000000000000011;
+					};
+				};
+			};
+			buildConfigurationList = D7A000000000000000000030 /* Build configuration list for PBXProject "DataTalksPushSample" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D7A000000000000000000020;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				D7A000000000000000000031 /* XCLocalSwiftPackageReference "../../../.." */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = D7A000000000000000000021 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D7A000000000000000000011 /* DataTalksPushSample */,
+				D7A000000000000000000024 /* DataTalksPushSampleUITests */,
+				D7A000000000000000000055 /* NotificationService */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D7A000000000000000000023 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D7A000000000000000000026 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D7A00000000000000000005D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D7A000000000000000000022 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D7A000000000000000000025 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D7A00000000000000000005C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D7A000000000000000000027 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D7A000000000000000000011 /* DataTalksPushSample */;
+			targetProxy = D7A000000000000000000003 /* PBXContainerItemProxy */;
+		};
+		D7A00000000000000000005E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D7A000000000000000000055 /* NotificationService */;
+			targetProxy = D7A000000000000000000054 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		D7A000000000000000000040 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphonesimulator*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D7A000000000000000000041 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphonesimulator*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D7A000000000000000000042 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = DataTalksPushSample.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_KEY_CFBundleDisplayName = "DT Native";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = se.datatalks.sandbox;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		D7A000000000000000000043 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = DataTalksPushSample.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_KEY_CFBundleDisplayName = "DT Native";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = se.datatalks.sandbox;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		D7A000000000000000000044 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = se.datatalks.sandbox.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = DataTalksPushSample;
+			};
+			name = Debug;
+		};
+		D7A000000000000000000045 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = se.datatalks.sandbox.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = DataTalksPushSample;
+			};
+			name = Release;
+		};
+		D7A000000000000000000046 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = NotificationService.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "NotificationService-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = NotificationService;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = se.datatalks.sandbox.NotificationService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		D7A000000000000000000047 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = NotificationService.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "NotificationService-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = NotificationService;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = se.datatalks.sandbox.NotificationService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D7A000000000000000000030 /* Build configuration list for PBXProject "DataTalksPushSample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D7A000000000000000000040 /* Debug */,
+				D7A000000000000000000041 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D7A000000000000000000032 /* Build configuration list for PBXNativeTarget "DataTalksPushSample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D7A000000000000000000042 /* Debug */,
+				D7A000000000000000000043 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D7A000000000000000000033 /* Build configuration list for PBXNativeTarget "DataTalksPushSampleUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D7A000000000000000000044 /* Debug */,
+				D7A000000000000000000045 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D7A00000000000000000005B /* Build configuration list for PBXNativeTarget "NotificationService" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D7A000000000000000000046 /* Debug */,
+				D7A000000000000000000047 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		D7A000000000000000000031 /* XCLocalSwiftPackageReference "../../../.." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../../..;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D7A000000000000000000002 /* DataTalksPush */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DataTalksPush;
+		};
+		D7A000000000000000000051 /* DataTalksPushExtension */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DataTalksPushExtension;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = D7A000000000000000000010 /* Project object */;
+}
