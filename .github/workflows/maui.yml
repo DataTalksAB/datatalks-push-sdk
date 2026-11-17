@@ -37,10 +37,10 @@ jobs:
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.0.1xx
-      # Pinned workload set: .NET for iOS 26.5, whose Xcode the runners have (the newest sets need Xcode 27).
+      # Pinned together: workload set 10.0.111.1 carries .NET for iOS 26.5, which builds apps only with Xcode 26.5. The
+      # runners default to their newest Xcode, and the newest workload sets need Xcode 27, which they don't have yet.
       - run: dotnet workload install maui --version 10.0.111.1
-      # The runner defaults to its newest Xcode; .NET for iOS builds an app only with the Xcode version it was made for.
-      - run: sdks/maui/use-workload-xcode.sh
+      - run: sudo xcode-select -s /Applications/Xcode_26.5.app && xcodebuild -version
       - run: sdks/maui/build-native.sh
       - run: dotnet build sdks/maui/samples/maui-app -f net10.0-android
       - run: dotnet build sdks/maui/samples/maui-app -p:TargetFrameworks=net10.0-ios -p:RuntimeIdentifier=iossimulator-arm64
@@ -68,10 +68,10 @@ jobs:
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.0.1xx
-      # Pinned workload set: .NET for iOS 26.5, whose Xcode the runners have (the newest sets need Xcode 27).
+      # Pinned together: workload set 10.0.111.1 carries .NET for iOS 26.5, which builds apps only with Xcode 26.5. The
+      # runners default to their newest Xcode, and the newest workload sets need Xcode 27, which they don't have yet.
       - run: dotnet workload install maui --version 10.0.111.1
-      # The runner defaults to its newest Xcode; .NET for iOS builds an app only with the Xcode version it was made for.
-      - run: sdks/maui/use-workload-xcode.sh
+      - run: sudo xcode-select -s /Applications/Xcode_26.5.app && xcodebuild -version
       - run: sdks/maui/build-native.sh
       - run: sdks/maui/pack.sh
       # nuget.org trusted publishing: a short-lived key for this run, from the policy for this repository and workflow.
