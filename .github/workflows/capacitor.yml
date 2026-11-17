@@ -8,6 +8,8 @@ on:
     paths: ['sdks/capacitor/**', 'sdks/android/**', 'sdks/ios/**', '.github/workflows/capacitor.yml']
   pull_request:
     paths: ['sdks/capacitor/**', 'sdks/android/**', 'sdks/ios/**', '.github/workflows/capacitor.yml']
+  # Run by hand from the Actions tab.
+  workflow_dispatch:
 
 permissions:
   contents: read

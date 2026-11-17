@@ -8,6 +8,8 @@ on:
     paths: ['sdks/ios/**', 'spec/**', 'Package.swift', '.github/workflows/ios.yml']
   pull_request:
     paths: ['sdks/ios/**', 'spec/**', 'Package.swift', '.github/workflows/ios.yml']
+  # Run by hand from the Actions tab.
+  workflow_dispatch:
 
 permissions:
   contents: read

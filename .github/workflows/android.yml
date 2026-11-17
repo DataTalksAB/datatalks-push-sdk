@@ -8,6 +8,8 @@ on:
     paths: ['sdks/android/**', 'spec/**', '.github/workflows/android.yml']
   pull_request:
     paths: ['sdks/android/**', 'spec/**', '.github/workflows/android.yml']
+  # Run by hand from the Actions tab.
+  workflow_dispatch:
 
 permissions:
   contents: read

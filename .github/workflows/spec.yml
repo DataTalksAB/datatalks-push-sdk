@@ -6,6 +6,8 @@ on:
     paths: ['spec/**', '.github/workflows/spec.yml']
   pull_request:
     paths: ['spec/**', '.github/workflows/spec.yml']
+  # Run by hand from the Actions tab.
+  workflow_dispatch:
 
 permissions:
   contents: read
