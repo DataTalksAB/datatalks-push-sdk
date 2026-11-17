@@ -38,6 +38,8 @@ jobs:
         with:
           dotnet-version: 10.0.x
       - run: dotnet workload install maui
+      # The runner defaults to its newest Xcode; .NET for iOS builds an app only with the Xcode version it was made for.
+      - run: sdks/maui/use-workload-xcode.sh
       - run: sdks/maui/build-native.sh
       - run: dotnet build sdks/maui/samples/maui-app -f net10.0-android
       - run: dotnet build sdks/maui/samples/maui-app -p:TargetFrameworks=net10.0-ios -p:RuntimeIdentifier=iossimulator-arm64
@@ -66,6 +68,8 @@ jobs:
         with:
           dotnet-version: 10.0.x
       - run: dotnet workload install maui
+      # The runner defaults to its newest Xcode; .NET for iOS builds an app only with the Xcode version it was made for.
+      - run: sdks/maui/use-workload-xcode.sh
       - run: sdks/maui/build-native.sh
       - run: sdks/maui/pack.sh
       # nuget.org trusted publishing: a short-lived key for this run, from the policy for this repository and workflow.
