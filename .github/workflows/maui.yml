@@ -36,8 +36,9 @@ jobs:
           java-version: 17
       - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 10.0.x
-      - run: dotnet workload install maui
+          dotnet-version: 10.0.1xx
+      # Pinned workload set: .NET for iOS 26.5, whose Xcode the runners have (the newest sets need Xcode 27).
+      - run: dotnet workload install maui --version 10.0.111.1
       # The runner defaults to its newest Xcode; .NET for iOS builds an app only with the Xcode version it was made for.
       - run: sdks/maui/use-workload-xcode.sh
       - run: sdks/maui/build-native.sh
@@ -66,8 +67,9 @@ jobs:
           java-version: 17
       - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 10.0.x
-      - run: dotnet workload install maui
+          dotnet-version: 10.0.1xx
+      # Pinned workload set: .NET for iOS 26.5, whose Xcode the runners have (the newest sets need Xcode 27).
+      - run: dotnet workload install maui --version 10.0.111.1
       # The runner defaults to its newest Xcode; .NET for iOS builds an app only with the Xcode version it was made for.
       - run: sdks/maui/use-workload-xcode.sh
       - run: sdks/maui/build-native.sh

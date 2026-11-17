@@ -14,6 +14,8 @@
     <ApplicationId>se.datatalks.sandbox.maui</ApplicationId>
     <ApplicationDisplayVersion>0.1.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
+    <!-- The MAUI version of the library's own packages, whatever MAUI version the installed workload brings. -->
+    <MauiVersion>10.0.71</MauiVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">23.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
   </PropertyGroup>
