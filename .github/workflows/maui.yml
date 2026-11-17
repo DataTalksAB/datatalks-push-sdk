@@ -35,6 +35,9 @@ jobs:
           distribution: temurin
           java-version: 17
       - uses: actions/setup-dotnet@v5
+        env:
+          # A .NET of its own: the runner image's preinstalled SDKs bring workload manifests that conflict with these.
+          DOTNET_INSTALL_DIR: ${{ github.workspace }}/../dotnet
         with:
           dotnet-version: 10.0.1xx
       # Pinned together: workload set 10.0.111.1 carries .NET for iOS 26.5.10315, which builds apps only with Xcode 26.6.
@@ -66,6 +69,9 @@ jobs:
           distribution: temurin
           java-version: 17
       - uses: actions/setup-dotnet@v5
+        env:
+          # A .NET of its own: the runner image's preinstalled SDKs bring workload manifests that conflict with these.
+          DOTNET_INSTALL_DIR: ${{ github.workspace }}/../dotnet
         with:
           dotnet-version: 10.0.1xx
       # Pinned together: workload set 10.0.111.1 carries .NET for iOS 26.5.10315, which builds apps only with Xcode 26.6.
