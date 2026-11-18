@@ -2,27 +2,27 @@ PODS:
   - Capacitor (6.2.3):
     - CapacitorCordova
   - CapacitorCordova (6.2.3)
-  - DatatalksPushCapacitor (0.5.0-beta.1):
+  - DatatalksAbPushCapacitor (0.5.0-beta.1):
     - Capacitor
 
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
-  - DatatalksPushCapacitor (from `../../../..`)
+  - DatatalksAbPushCapacitor (from `../../../..`)
 
 EXTERNAL SOURCES:
   Capacitor:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorCordova:
     :path: "../../node_modules/@capacitor/ios"
-  DatatalksPushCapacitor:
+  DatatalksAbPushCapacitor:
     :path: "../../../.."
 
 SPEC CHECKSUMS:
   Capacitor: 0ccf62a00a8a5d696cfcd9e52d2935571925df8d
   CapacitorCordova: 80f92d91cf553071baa7b16c7b558578e8a84291
-  DatatalksPushCapacitor: 3626ab8e4bf631051c28468d48819215c4c19dd1
+  DatatalksAbPushCapacitor: 56838099d55aee073935f01e5bed3077d2176b82
 
-PODFILE CHECKSUM: 3aaa58512161901228e1936ce6cebef68a2f8370
+PODFILE CHECKSUM: 9c8e476311a0873382dc9c577751eb9c5b2c123a
 
 COCOAPODS: 1.15.2

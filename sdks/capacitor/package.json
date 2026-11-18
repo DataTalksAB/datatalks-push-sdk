@@ -15,7 +15,7 @@
     "ios/Sources/",
     "ios/Extension/",
     "Package.swift",
-    "DatatalksPushCapacitor.podspec",
+    "DatatalksAbPushCapacitor.podspec",
     "DatatalksPushExtension.podspec"
   ],
   "author": "Data Talks",
