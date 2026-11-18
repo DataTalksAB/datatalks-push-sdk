@@ -3,7 +3,7 @@ name: Capacitor
 on:
   push:
     branches: [main]
-    # A release tag (the plain version, e.g. 0.5.0-beta.1) publishes @datatalks/push-capacitor to npm.
+    # A release tag (the plain version, e.g. 0.5.0-beta.1) publishes @datatalks-ab/push-capacitor to npm.
     tags: ['[0-9]+.[0-9]+.[0-9]+*']
     paths: ['sdks/capacitor/**', 'sdks/android/**', 'sdks/ios/**', '.github/workflows/capacitor.yml']
   pull_request:

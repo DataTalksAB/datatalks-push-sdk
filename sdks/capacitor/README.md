@@ -1,13 +1,13 @@
 # Data Talks Push for Capacitor
 
-`@datatalks/push-capacitor` wraps the [Android](../android/README.md) and [iOS](../ios/README.md) SDKs, with the same behaviour and rules, for JavaScript. It requires Capacitor 6 to 8, Android 6 (API 23) or later, and iOS 14 or later.
+`@datatalks-ab/push-capacitor` wraps the [Android](../android/README.md) and [iOS](../ios/README.md) SDKs, with the same behaviour and rules, for JavaScript. It requires Capacitor 6 to 8, Android 6 (API 23) or later, and iOS 14 or later.
 
 The plugin replaces any other push plugin in your app, such as `@capacitor/push-notifications` or OneSignal: see [Another push plugin](#another-push-plugin). For an Ionic React app, [guide-ionic-react.md](guide-ionic-react.md) covers the whole integration, including the identity token from your backend.
 
 ## Install
 
 ```bash
-npm install @datatalks/push-capacitor
+npm install @datatalks-ab/push-capacitor
 npx cap sync
 ```
 
@@ -34,7 +34,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        maven { url "${project(':datatalks-push-capacitor').projectDir}/maven" }
+        maven { url "${project(':datatalks-ab-push-capacitor').projectDir}/maven" }
     }
 }
 ```
@@ -165,7 +165,7 @@ If another one remains, a debug build logs it at startup with the class it found
 ## Use
 
 ```ts
-import { DataTalksPush } from '@datatalks/push-capacitor';
+import { DataTalksPush } from '@datatalks-ab/push-capacitor';
 
 await DataTalksPush.addListener('notificationOpened', ({ deepLink, data }) => {
   // Route to deepLink. A tap that started the app arrives here as soon as this listener is added.

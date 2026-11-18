@@ -18,5 +18,5 @@ First public release, for Android, iOS, .NET MAUI and Capacitor.
 - Notifications: title, body, link, custom data, Android channel, colour and large icon, grouping and collapse keys.
   Pictures and delivery receipts on iOS come from a notification service extension (`DataTalksPushExtension`).
 - Events: deliveries, opens and clicks, reported once each and retried until the service answers.
-- Wrappers: .NET MAUI (`DataTalks.Push.Maui`) and Capacitor 6 to 8 (`@datatalks/push-capacitor`) over the native SDKs.
+- Wrappers: .NET MAUI (`DataTalks.Push.Maui`) and Capacitor 6 to 8 (`@datatalks-ab/push-capacitor`) over the native SDKs.
 - Sample apps for every SDK, and an Ionic React guide.

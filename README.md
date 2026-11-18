@@ -9,7 +9,7 @@ Client SDKs for push notifications sent with [Data Talks](https://datatalks.se):
 | Android (Kotlin) | [sdks/android](sdks/android) | `implementation("se.datatalks:push-android:0.5.0-beta.1")` from Maven Central |
 | iOS (Swift) | [sdks/ios](sdks/ios) | Swift Package Manager: `https://github.com/DataTalksTeam/datatalks-push-sdk`, from `0.5.0-beta.1` |
 | .NET MAUI | [sdks/maui](sdks/maui) | `dotnet add package DataTalks.Push.Maui --version 0.5.0-beta.1` |
-| Capacitor | [sdks/capacitor](sdks/capacitor) | `npm install @datatalks/push-capacitor@0.5.0-beta.1` |
+| Capacitor | [sdks/capacitor](sdks/capacitor) | `npm install @datatalks-ab/push-capacitor@0.5.0-beta.1` |
 
 Each SDK's README covers set-up, the API and its sample app. For an Ionic React app, follow
 [the Ionic React guide](sdks/capacitor/guide-ionic-react.md). React Native and Flutter SDKs come later.

@@ -1,6 +1,6 @@
 # Data Talks Push in an Ionic React app
 
-How to add `@datatalks/push-capacitor` to an Ionic React app on Capacitor 6, step by step: what to remove first, the changes to the Android and iOS projects, the React code, and the identity token your backend signs. [README.md](README.md) is the reference for each piece.
+How to add `@datatalks-ab/push-capacitor` to an Ionic React app on Capacitor 6, step by step: what to remove first, the changes to the Android and iOS projects, the React code, and the identity token your backend signs. [README.md](README.md) is the reference for each piece.
 
 The plugin accepts Capacitor 6 to 8. It has been built and run in Capacitor 6 apps, and its iOS part also compiles against Capacitor 7 and 8. Step 4 assumes CocoaPods, Capacitor 6's default; with Swift Package Manager there is no Podfile, and the app gets the plugin from its `Package.swift` instead ([README](README.md#ios)).
 
@@ -31,7 +31,7 @@ If one remains, a debug build logs it at startup, with the class it found.
 ## 2. Install and configure
 
 ```bash
-npm install @datatalks/push-capacitor   # or, from a packed tarball: npm install ./datatalks-push-capacitor-<version>.tgz
+npm install @datatalks-ab/push-capacitor   # or, from a packed tarball: npm install ./datatalks-ab-push-capacitor-<version>.tgz
 npx cap sync
 ```
 
@@ -62,7 +62,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        maven { url "${project(':datatalks-push-capacitor').projectDir}/maven" }
+        maven { url "${project(':datatalks-ab-push-capacitor').projectDir}/maven" }
     }
 }
 ```
@@ -118,7 +118,7 @@ By default, iOS shows only a push's text, and Data Talks counts a push as delive
 
    ```ruby
    target 'NotificationService' do
-     pod 'DatatalksPushExtension', :path => '../../node_modules/@datatalks/push-capacitor'
+     pod 'DatatalksPushExtension', :path => '../../node_modules/@datatalks-ab/push-capacitor'
    end
    ```
 
@@ -144,7 +144,7 @@ The SDK starts on its own when the app launches, from the key in the config: it 
 ```tsx
 import { useEffect, useRef } from 'react';
 import { useIonRouter } from '@ionic/react';
-import { DataTalksPush } from '@datatalks/push-capacitor';
+import { DataTalksPush } from '@datatalks-ab/push-capacitor';
 
 export function PushEvents() {
   // useIonRouter returns a new object on every render: a ref keeps the latest, so the listeners are added only once.

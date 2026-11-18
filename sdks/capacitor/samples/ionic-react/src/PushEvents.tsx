@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useIonRouter } from '@ionic/react';
-import { DataTalksPush } from '@datatalks/push-capacitor';
+import { DataTalksPush } from '@datatalks-ab/push-capacitor';
 import { addEvent } from './events';
 
 /** The guide's listener (guide-ionic-react.md, step 5), plus the lines the demo shows in its events list. */

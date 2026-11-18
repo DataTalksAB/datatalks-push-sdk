@@ -8,7 +8,7 @@ All SDKs share one version, and one tag releases them all. The tag is the plain 
 | Android | Maven Central, `se.datatalks:push-android` | `android.yml` |
 | iOS | Swift Package Manager, from the tag itself | no upload; `ios.yml` checks the versions |
 | .NET MAUI | nuget.org, `DataTalks.Push.Maui` and its two bindings | `maui.yml` |
-| Capacitor | npm, `@datatalks/push-capacitor` | `capacitor.yml` |
+| Capacitor | npm, `@datatalks-ab/push-capacitor` | `capacitor.yml` |
 | All | A GitHub release with the changelog section | `release.yml` |
 
 ## Releasing a version
@@ -76,9 +76,9 @@ Optionally reserve the `DataTalks.` package id prefix.
 
 ### npm (Capacitor)
 
-1. Create the npm organization `datatalks`.
+1. Create the npm organization `datatalks-ab`.
 2. A trusted publisher is configured on an existing package, so the first version goes out with a token: create a
-   granular access token that can publish to the `@datatalks` scope (with the option to bypass two-factor
+   granular access token that can publish to the `@datatalks-ab` scope (with the option to bypass two-factor
    authentication, if the organization requires it), and add it as the environment secret `NPM_TOKEN`.
 3. After the first release, add the trusted publisher on the package's settings page: repository owner and name,
    workflow file `capacitor.yml`, environment `release`. Then delete the `NPM_TOKEN` secret and revoke the token.

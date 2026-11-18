@@ -2,5 +2,5 @@
 include ':capacitor-android'
 project(':capacitor-android').projectDir = new File('../node_modules/@capacitor/android/capacitor')
 
-include ':datatalks-push-capacitor'
-project(':datatalks-push-capacitor').projectDir = new File('../../../android')
+include ':datatalks-ab-push-capacitor'
+project(':datatalks-ab-push-capacitor').projectDir = new File('../../../android')

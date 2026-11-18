@@ -7,7 +7,7 @@
     "@capacitor/android": "^6.2.1",
     "@capacitor/core": "^6.2.1",
     "@capacitor/ios": "^6.2.1",
-    "@datatalks/push-capacitor": "file:../.."
+    "@datatalks-ab/push-capacitor": "file:../.."
   },
   "devDependencies": {
     "@capacitor/cli": "^6.2.1"

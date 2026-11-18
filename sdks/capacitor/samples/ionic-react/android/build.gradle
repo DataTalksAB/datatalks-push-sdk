@@ -21,8 +21,8 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        // The Data Talks Android SDK, bundled in @datatalks/push-capacitor.
-        maven { url "${project(':datatalks-push-capacitor').projectDir}/maven" }
+        // The Data Talks Android SDK, bundled in @datatalks-ab/push-capacitor.
+        maven { url "${project(':datatalks-ab-push-capacitor').projectDir}/maven" }
     }
 }
 

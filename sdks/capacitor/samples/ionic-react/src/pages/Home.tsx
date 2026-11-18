@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { IonButton, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonPage, IonToggle, IonToolbar, useIonViewWillEnter } from '@ionic/react';
-import { DataTalksPush } from '@datatalks/push-capacitor';
+import { DataTalksPush } from '@datatalks-ab/push-capacitor';
 import { addEvent, useEvents } from '../events';
 
 /**

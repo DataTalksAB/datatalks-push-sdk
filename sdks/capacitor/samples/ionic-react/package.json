@@ -12,7 +12,7 @@
     "@capacitor/android": "^6.2.1",
     "@capacitor/core": "^6.2.1",
     "@capacitor/ios": "^6.2.1",
-    "@datatalks/push-capacitor": "file:../..",
+    "@datatalks-ab/push-capacitor": "file:../..",
     "@ionic/react": "^6.7.5",
     "@ionic/react-router": "^6.7.5",
     "react": "^18.3.1",
