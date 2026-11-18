@@ -55,6 +55,11 @@ public final class DTPBridge: NSObject {
         DataTalksPush.didRegisterForRemoteNotifications(deviceToken: deviceToken)
     }
 
+    @objc(setFcmToken:)
+    public static func setFcmToken(_ token: String) {
+        DataTalksPush.setFcmToken(token)
+    }
+
     @objc(didFailToRegisterForRemoteNotificationsWithError:)
     public static func didFailToRegisterForRemoteNotifications(error: NSError) {
         DataTalksPush.didFailToRegisterForRemoteNotifications(error: error)

@@ -12,6 +12,8 @@ public static partial class DataTalksPush
 
     internal static bool? RequestedProvisional { get; private set; }
 
+    internal static List<string> FcmTokens { get; } = [];
+
     /// <summary>The permission name the fake native SDK returns for a request and for a status check.</summary>
     internal static string? NativePermission { get; set; }
 
@@ -29,6 +31,7 @@ public static partial class DataTalksPush
         Initialized = null;
         RequestedProvisional = null;
         NativePermission = null;
+        FcmTokens.Clear();
     }
 
     /// <summary>Runs what was posted to the main thread, as the next run loop turn would.</summary>
@@ -68,6 +71,8 @@ public static partial class DataTalksPush
     private static partial void PlatformLogout()
     {
     }
+
+    private static partial void PlatformSetFcmToken(string token) => FcmTokens.Add(token);
 
     private static partial void PlatformSetMarketingOptIn(bool optIn)
     {

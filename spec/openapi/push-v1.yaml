@@ -619,8 +619,7 @@ components:
           type: string
           description: |
             `fcm` (Android, and iOS apps that send through their own Firebase project) or `apns` (iOS only). On iOS with
-            `fcm`, registration needs the `DataTalksPushFCM` product, which reports the FCM token instead of the APNs
-            token.
+            `fcm`, the app passes its FCM registration token to the SDK, which registers it instead of the APNs token.
           enum: [fcm, apns]
     RegisterDeviceRequest:
       allOf:

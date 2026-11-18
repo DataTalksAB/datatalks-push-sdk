@@ -186,6 +186,12 @@ public class DataTalksPushPlugin extends Plugin {
         call.resolve();
     }
 
+    // The Android SDK reads the FCM token from Firebase itself.
+    @PluginMethod
+    public void setFcmToken(PluginCall call) {
+        call.resolve();
+    }
+
     @PluginMethod
     public void setMarketingOptIn(PluginCall call) {
         Boolean optIn = call.getBoolean("optIn");

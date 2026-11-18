@@ -80,6 +80,11 @@ struct PushEvent: Equatable {
     let link: String?
 }
 
+enum Transport {
+    static let apns = "apns"
+    static let fcm = "fcm"
+}
+
 /// What the SDK keeps on the device: the key, install id, secret, token and identity values in the Keychain, the rest in user
 /// defaults. Used on the runtime's queue only.
 final class PushStore {
@@ -88,12 +93,14 @@ final class PushStore {
         static let installId = "install_id"
         static let deviceSecret = "device_secret"
         static let apnsToken = "apns_token"
+        static let fcmToken = "fcm_token"
         static let pendingIdentity = "pending_identity"
         static let acceptedIdentity = "accepted_identity"
         static let pendingDelete = "pending_delete"
 
         static let installed = "installed"
         static let baseUrl = "base_url"
+        static let iosTransport = "ios_transport"
         static let tokenChanged = "token_changed"
         static let registeredOn = "registered_on"
         static let reportedPermission = "reported_permission"
@@ -157,6 +164,26 @@ final class PushStore {
 
     var apnsToken: String? {
         readSecure(Key.apnsToken)
+    }
+
+    /// The registration token the app passed from Firebase Messaging, for apps that send through their own Firebase project.
+    var fcmToken: String? {
+        readSecure(Key.fcmToken)
+    }
+
+    /// The transport the portal sets for iOS: `apns`, or `fcm` for apps that send through their own Firebase project. `apns` until
+    /// the settings are read. A change registers again with the other token.
+    var iosTransport: String {
+        get { defaults.string(forKey: Key.iosTransport) ?? Transport.apns }
+        set {
+            if newValue != iosTransport { tokenChanged = true }
+            defaults.set(newValue, forKey: Key.iosTransport)
+        }
+    }
+
+    /// The token for the transport in use.
+    var registrationToken: String? {
+        iosTransport == Transport.fcm ? fcmToken : apnsToken
     }
 
     var baseUrl: String? {
@@ -248,11 +275,19 @@ final class PushStore {
         !readEvents().isEmpty
     }
 
-    /// Stores `token` if it differs from the stored one, and returns whether it did.
+    /// Stores the APNs `token` if it differs from the stored one, and returns whether it did.
     func updateToken(_ token: String) -> Bool {
         guard apnsToken != token else { return false }
         writeSecure(Key.apnsToken, token)
-        tokenChanged = true
+        if iosTransport == Transport.apns { tokenChanged = true }
+        return true
+    }
+
+    /// Stores the FCM `token` if it differs from the stored one, and returns whether it did.
+    func updateFcmToken(_ token: String) -> Bool {
+        guard fcmToken != token else { return false }
+        writeSecure(Key.fcmToken, token)
+        if iosTransport == Transport.fcm { tokenChanged = true }
         return true
     }
 
@@ -331,7 +366,7 @@ final class PushStore {
         cache.removeAll()
         values.removeAll()
         for key in [
-            Key.baseUrl, Key.tokenChanged, Key.registeredOn, Key.reportedPermission, Key.pendingOptIn, Key.notBefore,
+            Key.baseUrl, Key.iosTransport, Key.tokenChanged, Key.registeredOn, Key.reportedPermission, Key.pendingOptIn, Key.notBefore,
             Key.failedAttempts, Key.configExpiresAt, Key.requireVerifiedIdentity, Key.events, Key.legacyOpenEvents,
         ] {
             defaults.removeObject(forKey: key)

@@ -76,6 +76,27 @@ func application(_ application: UIApplication, didFailToRegisterForRemoteNotific
 
 The SDK requests the token itself. Data Talks sends through APNs with your app's own key, so the app needs no Firebase on iOS.
 
+### iOS through Firebase
+
+If your iOS app already sends through its own Firebase project, set the iOS transport to FCM in the portal and post the FCM token instead, as Capacitor's Firebase setup does:
+
+```swift
+import FirebaseMessaging
+
+func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+    Messaging.messaging().apnsToken = deviceToken
+    Messaging.messaging().token { token, error in
+        if let error {
+            NotificationCenter.default.post(name: .capacitorDidFailToRegisterForRemoteNotifications, object: error)
+        } else if let token {
+            NotificationCenter.default.post(name: .capacitorDidRegisterForRemoteNotifications, object: token)
+        }
+    }
+}
+```
+
+The plugin passes a posted string to the SDK as the FCM token. If the app gets the token in JavaScript instead, pass it with `DataTalksPush.setFcmToken({ token })`. On Android that call does nothing: the SDK reads the token itself. Until a token arrives, iOS registers nothing.
+
 ### Scenes, for Xcode 27
 
 An app built with the iOS 27 SDK must use scenes. Without them, iOS terminates the app at launch, and the device log says "UIScene life cycle is required for apps built with this SDK", from `_UIApplicationEvaluateRuntimeIssueForNoSceneLifecycleAdoption`. Capacitor's template adopts scenes from 8.5 ([its guide](https://capacitorjs.com/docs/updating/8-5)), with a `SceneDelegateProxy` that earlier versions lack. Before 8.5 (Capacitor 6 included), make two changes yourself, as [`samples/plain/`](samples/plain/) and [`samples/ionic-react/`](samples/ionic-react/) do:
@@ -160,6 +181,7 @@ await DataTalksPush.identify({ externalId: String(user.id), identityToken });
 
 await DataTalksPush.logout();
 await DataTalksPush.setMarketingOptIn({ optIn: false });
+await DataTalksPush.setFcmToken({ token }); // iOS through Firebase only, when the AppDelegate doesn't post the token
 await DataTalksPush.deleteLocalData();
 ```
 

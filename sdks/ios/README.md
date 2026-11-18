@@ -1,6 +1,6 @@
 # Data Talks Push for iOS
 
-`DataTalksPush` for Swift Package Manager. iOS 14 or later, no third-party dependencies. Pushes go through APNs with your app's own key.
+`DataTalksPush` for Swift Package Manager. iOS 14 or later, no third-party dependencies. Pushes go through APNs with your app's own key, or through your own Firebase project if your iOS app already uses one ([see below](#apps-that-send-through-firebase)).
 
 ## Install
 
@@ -50,6 +50,27 @@ final class MyListener: DataTalksPushListener {
     func onIdentityResult(_ result: DataTalksIdentityResult) { /* a refused identify isn't retried */ }
 }
 ```
+
+## Apps that send through Firebase
+
+If your iOS app already gets its pushes through its own Firebase project, set the iOS transport to FCM in the portal and pass the FCM
+registration token to the SDK each time Firebase Messaging reports it:
+
+```swift
+import FirebaseMessaging
+
+extension AppDelegate: MessagingDelegate {
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        if let fcmToken { DataTalksPush.setFcmToken(fcmToken) }
+    }
+}
+```
+
+Set `Messaging.messaging().delegate` right after `FirebaseApp.configure()`: Firebase calls it at every launch and whenever the token
+changes. The SDK doesn't link Firebase; your app keeps its own setup, and Firebase still needs the APNs token (its swizzling passes it
+on, or set `Messaging.messaging().apnsToken` in `didRegisterForRemoteNotificationsWithDeviceToken`). FCM delivers through APNs, so taps,
+the notification delegate and the [service extension](#pictures-and-delivery-receipts) work as they do with APNs. Until a token
+arrives, the SDK registers nothing and logs a warning.
 
 ## An app with its own notification delegate
 
@@ -112,11 +133,10 @@ extension share: two apps with this SDK in one group would take each other's del
 - **A tap** opens the push's link. `https` links go through the system, so your universal links work. Other schemes open only if your app declares them in `CFBundleURLTypes`. Without a link, the tap just opens the app. An app that routes links itself passes `DataTalksPushOptions(openLinks: false)`; the link then only reaches `onNotificationOpened`.
 - **Opens and clicks** are reported to the campaign's results (contract 1.1.0): an open for each tap, plus a click when the push has a link, whether the SDK or your app opens it. They are queued on the device (up to 200, for up to 30 days) and sent with the next sync while the app runs. They carry the push's id and the time, nothing about the person or the device.
 - **Delivery** is reported by the app's [Notification Service Extension](#pictures-and-delivery-receipts). Without one, the service counts an opened push as delivered.
-- **The APNs environment** comes from the app's provisioning profile: `sandbox` for development builds and `production` for all others, App Store builds included. A simulator is `sandbox`.
+- **The APNs environment** comes from the app's provisioning profile: `sandbox` for development builds and `production` for all others, App Store builds included. A simulator is `sandbox`. Through Firebase, Firebase picks it.
 - **A reinstall is a new install.** The Keychain survives an uninstall, but the SDK starts over, since uninstalling the app also signs the user out.
 - **Retries run only while the app runs.** Anything left when the app stops is sent at the next launch: iOS offers an SDK no way to run it later unless the app adds a background mode.
 - **Pictures** need the [Notification Service Extension](#pictures-and-delivery-receipts) too.
-- **Apps that send through Firebase** on iOS need the `DataTalksPushFCM` product, which this version doesn't include. The SDK logs a warning and registers nothing.
 
 ## The sample
 

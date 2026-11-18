@@ -91,6 +91,20 @@ public static partial class DataTalksPush
         PlatformIdentify(externalId, email, identityToken);
     }
 
+    /// <summary>
+    /// For apps whose iOS pushes go through their own Firebase project (transport FCM in the portal): pass the FCM registration token each time
+    /// Firebase Messaging reports it. A null or empty token is ignored. On Android the SDK reads the token itself, so the call does nothing there.
+    /// </summary>
+    public static void SetFcmToken(string? token)
+    {
+        if (string.IsNullOrEmpty(token))
+        {
+            return;
+        }
+
+        PlatformSetFcmToken(token);
+    }
+
     /// <summary>Unlinks this install from its user. The install stays registered.</summary>
     public static void Logout()
     {
@@ -116,6 +130,8 @@ public static partial class DataTalksPush
     private static partial Task<DataTalksPermission> PlatformGetPermissionStatusAsync();
 
     private static partial void PlatformIdentify(string? externalId, string? email, string? identityToken);
+
+    private static partial void PlatformSetFcmToken(string token);
 
     private static partial void PlatformLogout();
 

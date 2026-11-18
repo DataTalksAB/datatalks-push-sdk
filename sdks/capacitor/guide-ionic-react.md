@@ -90,7 +90,7 @@ func application(_ application: UIApplication, didFailToRegisterForRemoteNotific
 }
 ```
 
-iOS needs no Firebase: Data Talks sends through APNs with your key.
+iOS needs no Firebase: Data Talks sends through APNs with your key. If your iOS app already sends through its own Firebase project, post the FCM token instead: [iOS through Firebase](README.md#ios-through-firebase).
 
 **With Xcode 27, add scenes.** An app built with the iOS 27 SDK must use them, or iOS terminates it right after the launch screen. Capacitor 6's template has none, so add them yourself, as DT Ionic does:
 

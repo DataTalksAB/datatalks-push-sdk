@@ -95,6 +95,17 @@ final class PushRuntime {
         }
     }
 
+    func onNewFcmToken(_ token: String) {
+        guard !token.isEmpty else {
+            PushLog.warning("An empty FCM token was ignored.")
+            return
+        }
+
+        queue.async { [self] in
+            if store.updateFcmToken(token), store.appKey != nil { syncNow() }
+        }
+    }
+
     func send(identity: PendingIdentity) {
         queue.async { [self] in
             guard store.appKey != nil else {

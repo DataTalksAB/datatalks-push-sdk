@@ -14,6 +14,7 @@ public class DataTalksPushPlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "requestPermissions", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "identify", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "logout", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setFcmToken", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "setMarketingOptIn", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "deleteLocalData", returnType: CAPPluginReturnPromise),
     ]
@@ -72,9 +73,12 @@ public class DataTalksPushPlugin: CAPPlugin, CAPBridgedPlugin {
     }
 
     @objc private func didRegister(_ notification: Notification) {
-        // A String is a Firebase token, posted when the AppDelegate asks Firebase. This SDK uses only the APNs token.
-        guard let token = notification.object as? Data else { return }
-        DataTalksPush.didRegisterForRemoteNotifications(deviceToken: token)
+        // Data is the APNs token. A String is the FCM token, posted by an AppDelegate set up for Firebase.
+        if let token = notification.object as? Data {
+            DataTalksPush.didRegisterForRemoteNotifications(deviceToken: token)
+        } else if let token = notification.object as? String {
+            DataTalksPush.setFcmToken(token)
+        }
     }
 
     @objc private func didFailToRegister(_ notification: Notification) {
@@ -105,6 +109,16 @@ public class DataTalksPushPlugin: CAPPlugin, CAPBridgedPlugin {
 
     @objc func logout(_ call: CAPPluginCall) {
         DataTalksPush.logout()
+        call.resolve()
+    }
+
+    @objc func setFcmToken(_ call: CAPPluginCall) {
+        guard let token = call.getString("token"), !token.isEmpty else {
+            call.reject("setFcmToken needs a token.")
+            return
+        }
+
+        DataTalksPush.setFcmToken(token)
         call.resolve()
     }
 

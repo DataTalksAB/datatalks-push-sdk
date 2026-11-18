@@ -66,6 +66,9 @@ final class PushSync {
     /// Set until the next app start when the app is disabled or the key refused: the same call would get the same answer.
     var stopped = false
 
+    // Warned once per launch that the app sends through Firebase but hasn't passed its FCM token.
+    private var warnedNoFcmToken = false
+
     init(
         store: PushStore,
         facts: DeviceFacts,
@@ -161,13 +164,13 @@ final class PushSync {
         store.configExpiresAt = clock() + ((config["refresh_after_seconds"] as? TimeInterval) ?? Self.defaultConfigSeconds)
 
         let ios = (config["platforms"] as? [String: Any])?["ios"] as? [String: Any]
-        guard ios?["transport"] as? String == "apns" else {
-            // Registration through FCM needs the DataTalksPushFCM product, which this version doesn't include.
-            PushLog.warning("The app isn't set up for iOS through APNs in the portal.")
+        guard let transport = ios?["transport"] as? String, transport == Transport.apns || transport == Transport.fcm else {
+            PushLog.warning("The app isn't set up for iOS in the portal.")
             stopped = true
             return .stop(.done)
         }
 
+        store.iosTransport = transport
         return .next
     }
 
@@ -175,8 +178,15 @@ final class PushSync {
         let permission = facts.permission()
         if !registrationIsDue(permission: permission) { return .next }
 
-        // Nothing to register until APNs provides a token, which starts a new sync. The later steps wait too.
-        guard let token = store.apnsToken else { return .stop(.done) }
+        // Nothing to register until there's a token for the transport, whose arrival starts a new sync. The later steps wait too.
+        let throughFcm = store.iosTransport == Transport.fcm
+        guard let token = store.registrationToken else {
+            if throughFcm, !warnedNoFcmToken {
+                warnedNoFcmToken = true
+                PushLog.warning("The app sends through Firebase: pass its FCM registration token to DataTalksPush.setFcmToken.")
+            }
+            return .stop(.done)
+        }
 
         let installId = store.installId ?? UUID().uuidString.lowercased()
         store.installId = installId
@@ -185,7 +195,12 @@ final class PushSync {
         body["install_id"] = installId
         body["platform"] = "ios"
         body["environment"] = facts.environment
-        body["apns_token"] = token
+        if throughFcm {
+            body["fcm_token"] = token
+            body["fcm_token_type"] = "fcm_token"
+        } else {
+            body["apns_token"] = token
+        }
         body["os_permission"] = permission
 
         let response = try api.call("POST", "/devices", deviceSecret: store.deviceSecret, body: body)

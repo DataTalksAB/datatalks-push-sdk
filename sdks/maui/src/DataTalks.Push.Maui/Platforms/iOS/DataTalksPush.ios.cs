@@ -81,6 +81,11 @@ public static partial class DataTalksPush
         DTPBridge.Logout();
     }
 
+    private static partial void PlatformSetFcmToken(string token)
+    {
+        DTPBridge.SetFcmToken(token);
+    }
+
     private static partial void PlatformSetMarketingOptIn(bool optIn)
     {
         DTPBridge.SetMarketingOptIn(optIn);

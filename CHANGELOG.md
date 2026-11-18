@@ -8,6 +8,9 @@ First public release, for Android, iOS, .NET MAUI and Capacitor.
 
 - Registration: the SDK registers the device with the app key and keeps the registration current (token changes,
   permission changes, a daily refresh).
+- iOS through Firebase: an app whose iOS pushes go through its own Firebase project passes the FCM token with
+  `setFcmToken` (`SetFcmToken` in MAUI), and the SDK registers it instead of the APNs token. The SDK still doesn't
+  depend on Firebase.
 - Identity: `identify` links the install to a signed-in user, optionally with an identity token signed by your backend;
   `logout` unlinks it. Repeating the same identity on the same UTC day doesn't call the service.
 - Consent and deletion: the in-app marketing opt-in, and `deleteLocalData`, which also deletes the install on the

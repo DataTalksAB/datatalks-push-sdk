@@ -20,6 +20,10 @@ export class DataTalksPushWeb extends WebPlugin implements DataTalksPushPlugin {
     throw this.unimplemented('Data Talks push runs on Android and iOS only.');
   }
 
+  async setFcmToken(): Promise<void> {
+    throw this.unimplemented('Data Talks push runs on Android and iOS only.');
+  }
+
   async setMarketingOptIn(): Promise<void> {
     throw this.unimplemented('Data Talks push runs on Android and iOS only.');
   }

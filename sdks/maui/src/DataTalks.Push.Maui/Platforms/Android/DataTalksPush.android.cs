@@ -67,6 +67,11 @@ public static partial class DataTalksPush
         NativePush.Logout();
     }
 
+    // The Android SDK reads the FCM token from Firebase itself.
+    private static partial void PlatformSetFcmToken(string token)
+    {
+    }
+
     private static partial void PlatformSetMarketingOptIn(bool optIn)
     {
         NativePush.SetMarketingOptIn(optIn);

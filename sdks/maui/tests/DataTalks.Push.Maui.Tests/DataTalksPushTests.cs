@@ -64,6 +64,16 @@ public sealed class DataTalksPushTests : IDisposable
     }
 
     [Fact]
+    public void AnFcmToken_ReachesTheNativeSdk_AndANullOrEmptyOneIsIgnored()
+    {
+        DataTalksPush.SetFcmToken(null);
+        DataTalksPush.SetFcmToken(string.Empty);
+        DataTalksPush.SetFcmToken("fcm-1");
+
+        Assert.Equal(["fcm-1"], DataTalksPush.FcmTokens);
+    }
+
+    [Fact]
     public void ATapWithAHandler_ReachesItAtOnce_AndIsNotKept()
     {
         var first = Record();

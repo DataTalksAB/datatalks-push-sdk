@@ -51,6 +51,10 @@ interface DTPBridge
     void DidRegisterForRemoteNotifications(NSData deviceToken);
 
     [Static]
+    [Export("setFcmToken:")]
+    void SetFcmToken(string token);
+
+    [Static]
     [Export("didFailToRegisterForRemoteNotificationsWithError:")]
     void DidFailToRegisterForRemoteNotifications(NSError error);
 

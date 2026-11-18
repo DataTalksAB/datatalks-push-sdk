@@ -86,6 +86,29 @@ final class StoreAndFactsTests: XCTestCase {
         XCTAssertFalse(store.tokenChanged)
     }
 
+    func testOnlyTheTokenForTheTransportInUseCountsAsAChange() {
+        let store = PushStore(values: MemoryValues(), defaults: freshDefaults())
+
+        XCTAssertTrue(store.updateFcmToken("fcm-1"))
+        XCTAssertFalse(store.tokenChanged)
+        XCTAssertNil(store.registrationToken)
+
+        store.iosTransport = "fcm"
+        XCTAssertTrue(store.tokenChanged)
+        XCTAssertEqual(store.registrationToken, "fcm-1")
+        store.markRegistered(day: 1, permission: "authorized")
+
+        XCTAssertTrue(store.updateToken(Contract.apnsToken))
+        XCTAssertFalse(store.tokenChanged)
+        XCTAssertFalse(store.updateFcmToken("fcm-1"))
+        XCTAssertTrue(store.updateFcmToken("fcm-2"))
+        XCTAssertTrue(store.tokenChanged)
+
+        store.markRegistered(day: 1, permission: "authorized")
+        store.iosTransport = "fcm"
+        XCTAssertFalse(store.tokenChanged)
+    }
+
     func testTheEventQueueKeepsTheNewest200EachWithItsOwnId() {
         let store = PushStore(values: MemoryValues(), defaults: freshDefaults())
 
@@ -157,11 +180,15 @@ final class StoreAndFactsTests: XCTestCase {
         store.appKey = Contract.appKey
         store.installId = Contract.installId
         store.queueEvent(PushEvent.open, uid: "push-1", occurredAt: Self.now)
+        _ = store.updateFcmToken("fcm-1")
+        store.iosTransport = "fcm"
 
         store.wipe()
 
         XCTAssertNil(store.appKey)
         XCTAssertNil(store.installId)
+        XCTAssertNil(store.fcmToken)
+        XCTAssertEqual(store.iosTransport, "apns")
         XCTAssertFalse(store.hasEvents)
         XCTAssertTrue(values.stored.isEmpty)
     }

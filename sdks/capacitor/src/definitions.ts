@@ -41,6 +41,10 @@ export interface MarketingOptInOptions {
   optIn: boolean;
 }
 
+export interface FcmTokenOptions {
+  token: string;
+}
+
 export interface NotificationOpenedEvent {
   deepLink?: string;
   data?: Record<string, unknown>;
@@ -83,6 +87,13 @@ export interface DataTalksPushPlugin {
 
   /** Unlinks this install from its user. The install stays registered. */
   logout(): Promise<void>;
+
+  /**
+   * For apps whose iOS pushes go through their own Firebase project (transport FCM in the portal): pass the FCM registration token
+   * each time Firebase reports it. Not needed when the AppDelegate posts the token as Capacitor's Firebase setup does. On Android the
+   * SDK reads the token itself, so the call does nothing there.
+   */
+  setFcmToken(options: FcmTokenOptions): Promise<void>;
 
   /** Records the user's in-app marketing choice on this device. Transactional pushes aren't affected. */
   setMarketingOptIn(options: MarketingOptInOptions): Promise<void>;

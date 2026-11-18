@@ -49,6 +49,7 @@ var status = await DataTalksPush.GetPermissionStatusAsync();   // Authorized, De
 DataTalksPush.Identify(externalId, email, identityToken);      // after sign-in, with the token your backend signed; a repeat that day only replays the answer
 DataTalksPush.Logout();
 DataTalksPush.SetMarketingOptIn(false);
+DataTalksPush.SetFcmToken(token);                              // iOS through Firebase only; does nothing on Android
 DataTalksPush.DeleteLocalData();                               // deletes the install too; the SDK stays off until the next Initialize
 
 DataTalksPush.NotificationOpened += (_, e) => Open(e.DeepLink, e.DataJson);
@@ -115,6 +116,17 @@ Plugin.Firebase needs `Xamarin.Firebase.Messaging` 124.0.0.2 or later and the SD
 On iOS, `FirebaseCloudMessagingImplementation.Initialize()` makes Plugin.Firebase the notification delegate. Call it before `UseDataTalksPush` starts the SDK, as its usual setup in `WillFinishLaunching` does; the SDK then passes it every notification that isn't from Data Talks. If it is called later, it takes over the delegate and taps on Data Talks pushes go to Plugin.Firebase instead.
 
 Checked with Plugin.Firebase.CloudMessaging 4.0.1.
+
+### iOS through Firebase
+
+If your iOS app sends through its own Firebase project too, set the iOS transport to FCM in the portal and pass the FCM token on. With Plugin.Firebase:
+
+```csharp
+CrossFirebaseCloudMessaging.Current.TokenChanged += (_, e) => DataTalksPush.SetFcmToken(e.Token);
+DataTalksPush.SetFcmToken(await CrossFirebaseCloudMessaging.Current.GetTokenAsync());
+```
+
+On Android the call does nothing: the SDK reads the token itself. On iOS, the SDK registers nothing until a token arrives. See the [iOS README](../ios/README.md#apps-that-send-through-firebase).
 
 ## Pictures and delivery receipts (iOS)
 

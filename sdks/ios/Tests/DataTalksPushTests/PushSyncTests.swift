@@ -4,6 +4,7 @@ import XCTest
 final class PushSyncTests: XCTestCase {
     private static let day: TimeInterval = 86400
     private static let uid = "8b0c6f7e-2d1a-4c3b-9a5e-0f1e2d3c4b5a"
+    private static let fcmToken = "fWm3x0Fixture:APA91bFixtureRegistrationToken"
 
     private var harness: SyncHarness!
     private var store: PushStore { harness.store }
@@ -184,14 +185,52 @@ final class PushSyncTests: XCTestCase {
         XCTAssertTrue(sync.stopped)
     }
 
-    func testAnIosAppThatSendsThroughFcmRegistersNothingWithoutTheFcmProduct() {
+    func testAnIosAppThatSendsThroughFcmRegistersTheFcmToken() {
         store.configExpiresAt = 0
-        StubServer.enqueue(StubResponse(status: 200, body: Data(#"{"require_verified_identity":false,"platforms":{"ios":{"transport":"fcm"}},"refresh_after_seconds":3600}"#.utf8)))
+        _ = store.updateFcmToken(Self.fcmToken)
+        StubServer.enqueue(Self.config(transport: "fcm"))
+        StubServer.enqueue(.created())
+
+        XCTAssertEqual(sync.run(), .done)
+
+        let body = StubServer.requests[1].json
+        Contract.assertFits("RegisterDeviceRequest", body)
+        XCTAssertEqual(body["platform"] as? String, "ios")
+        XCTAssertEqual(body["fcm_token"] as? String, Self.fcmToken)
+        XCTAssertEqual(body["fcm_token_type"] as? String, "fcm_token")
+        XCTAssertNil(body["apns_token"])
+        XCTAssertFalse(sync.isDue())
+    }
+
+    func testThroughFcmNothingIsRegisteredUntilTheAppPassesTheToken() {
+        store.configExpiresAt = 0
+        StubServer.enqueue(Self.config(transport: "fcm"))
 
         XCTAssertEqual(sync.run(), .done)
 
         XCTAssertEqual(StubServer.requests.count, 1)
-        XCTAssertTrue(sync.stopped)
+        XCTAssertFalse(sync.stopped)
+        XCTAssertTrue(sync.isDue())
+
+        XCTAssertTrue(store.updateFcmToken(Self.fcmToken))
+        StubServer.enqueue(.created())
+        XCTAssertEqual(sync.run(), .done)
+        XCTAssertEqual(StubServer.requests[1].json["fcm_token"] as? String, Self.fcmToken)
+    }
+
+    func testMovingTheAppToFcmRegistersAgainWithTheFcmToken() {
+        registerOnce()
+        _ = store.updateFcmToken(Self.fcmToken)
+        XCTAssertFalse(sync.isDue())
+
+        store.configExpiresAt = 0
+        StubServer.enqueue(Self.config(transport: "fcm"))
+        StubServer.enqueue(.updated())
+        XCTAssertEqual(sync.run(), .done)
+
+        XCTAssertEqual(StubServer.requests.count, 3)
+        XCTAssertEqual(StubServer.requests[2].json["fcm_token"] as? String, Self.fcmToken)
+        XCTAssertNil(StubServer.requests[2].json["apns_token"])
     }
 
     func testTheConfigIsCachedForAsLongAsItSays() {
@@ -505,6 +544,10 @@ final class PushSyncTests: XCTestCase {
     private func registerOnce(file: StaticString = #filePath, line: UInt = #line) {
         StubServer.enqueue(.created())
         XCTAssertEqual(sync.run(), .done, file: file, line: line)
+    }
+
+    private static func config(transport: String) -> StubResponse {
+        StubResponse(status: 200, body: Data(#"{"require_verified_identity":false,"platforms":{"ios":{"transport":"\#(transport)"}},"refresh_after_seconds":3600}"#.utf8))
     }
 
     private static func accepted(_ count: Int) -> StubResponse {

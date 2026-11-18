@@ -28,6 +28,12 @@ public enum DataTalksPush {
         PushRuntime.shared.onNewToken(deviceToken.map { String(format: "%02x", $0) }.joined())
     }
 
+    /// For apps whose iOS pushes go through their own Firebase project (transport FCM in the portal): pass the registration token
+    /// from `MessagingDelegate.messaging(_:didReceiveRegistrationToken:)` here, each time it arrives. Not needed with APNs.
+    public static func setFcmToken(_ token: String) {
+        PushRuntime.shared.onNewFcmToken(token)
+    }
+
     /// Forward `application(_:didFailToRegisterForRemoteNotificationsWithError:)` here. The install registers once a token arrives.
     public static func didFailToRegisterForRemoteNotifications(error: Error) {
         PushLog.warning("APNs gave no token: \(error.localizedDescription)")
