@@ -61,7 +61,7 @@ mavenPublishing {
         name.set("Data Talks Push for Android")
         description.set("Push notifications sent with Data Talks: device registration, identity, rendering and engagement events.")
         inceptionYear.set("2026")
-        url.set("https://github.com/DataTalksTeam/datatalks-push-sdk")
+        url.set("https://github.com/DataTalksAB/datatalks-push-sdk")
         licenses {
             license {
                 name.set("The Apache License, Version 2.0")
@@ -77,9 +77,9 @@ mavenPublishing {
             }
         }
         scm {
-            url.set("https://github.com/DataTalksTeam/datatalks-push-sdk")
-            connection.set("scm:git:https://github.com/DataTalksTeam/datatalks-push-sdk.git")
-            developerConnection.set("scm:git:ssh://git@github.com/DataTalksTeam/datatalks-push-sdk.git")
+            url.set("https://github.com/DataTalksAB/datatalks-push-sdk")
+            connection.set("scm:git:https://github.com/DataTalksAB/datatalks-push-sdk.git")
+            developerConnection.set("scm:git:ssh://git@github.com/DataTalksAB/datatalks-push-sdk.git")
         }
     }
 }

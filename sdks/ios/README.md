@@ -4,7 +4,7 @@
 
 ## Install
 
-Add `https://github.com/DataTalksTeam/datatalks-push-sdk` as a package in Xcode, and give the app the **Push Notifications** capability.
+Add `https://github.com/DataTalksAB/datatalks-push-sdk` as a package in Xcode, and give the app the **Push Notifications** capability.
 
 ## Start
 

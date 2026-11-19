@@ -2,6 +2,12 @@
 
 All SDKs in this repository share one version.
 
+## Unreleased
+
+- The repository moved to `github.com/DataTalksAB/datatalks-push-sdk`. The old `github.com/DataTalksTeam/...` URLs
+  redirect, so an app that added the Swift package by the old URL keeps resolving; switch it to the new URL when
+  convenient.
+
 ## 1.0.0-rc.1
 
 - One app key for every build: the portal issues `dtpk_{env}_…` keys, without `live_` or `test_`. Keys issued before

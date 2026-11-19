@@ -7,7 +7,7 @@
     <Authors>Data Talks</Authors>
     <Company>Data Talks</Company>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/DataTalksTeam/datatalks-push-sdk</RepositoryUrl>
+    <RepositoryUrl>https://github.com/DataTalksAB/datatalks-push-sdk</RepositoryUrl>
     <PackageProjectUrl>https://datatalks.se</PackageProjectUrl>
     <PackageTags>datatalks;push;notifications;maui</PackageTags>
     <IsPackable>false</IsPackable>

@@ -45,9 +45,11 @@ last, when the packages are out.
 
 ### GitHub
 
-- The repository is `DataTalksTeam/datatalks-push-sdk`, with exactly that casing: the Maven POM, `package.json` and the
-  MAUI packages point to it. It must be public before the first release tag, because npm provenance needs a public
-  repository.
+- The repository is `DataTalksAB/datatalks-push-sdk`, with exactly that casing: the Maven POM, `package.json` and the
+  MAUI packages point to it. It was `DataTalksTeam/datatalks-push-sdk` until 1.0.0-rc.1, and the published packages up
+  to that version still link there. The empty `DataTalksTeam` organization holds the old name so those links keep
+  redirecting: never create a repository in it. It must be public before the first release tag, because npm
+  provenance needs a public repository.
 - Create an environment named `release` (Settings → Environments) and add required reviewers to approve each publish.
   The publishing jobs read their secrets from it. If you limit its deployments, choose "Selected branches and tags" and
   allow the tag pattern `[0-9]*.[0-9]*.[0-9]*`.

@@ -22,7 +22,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/DataTalksTeam/datatalks-push-sdk.git"
+    "url": "https://github.com/DataTalksAB/datatalks-push-sdk.git"
   },
   "keywords": [
     "capacitor",

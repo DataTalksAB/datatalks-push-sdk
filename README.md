@@ -7,7 +7,7 @@ Client SDKs for push notifications sent with [Data Talks](https://datatalks.se):
 | SDK | Folder | Install |
 |---|---|---|
 | Android (Kotlin) | [sdks/android](sdks/android) | `implementation("se.datatalks:push-android:1.0.0-rc.1")` from Maven Central |
-| iOS (Swift) | [sdks/ios](sdks/ios) | Swift Package Manager: `https://github.com/DataTalksTeam/datatalks-push-sdk`, from `1.0.0-rc.1` |
+| iOS (Swift) | [sdks/ios](sdks/ios) | Swift Package Manager: `https://github.com/DataTalksAB/datatalks-push-sdk`, from `1.0.0-rc.1` |
 | .NET MAUI | [sdks/maui](sdks/maui) | `dotnet add package DataTalks.Push.Maui --version 1.0.0-rc.1` |
 | Capacitor | [sdks/capacitor](sdks/capacitor) | `npm install @datatalks-ab/push-capacitor@1.0.0-rc.1` |
 
