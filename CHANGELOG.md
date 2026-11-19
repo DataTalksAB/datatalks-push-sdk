@@ -2,7 +2,7 @@
 
 All SDKs in this repository share one version.
 
-## Unreleased
+## 1.0.0-rc.2
 
 - The repository moved to `github.com/DataTalksAB/datatalks-push-sdk`. The old `github.com/DataTalksTeam/...` URLs
   redirect, so an app that added the Swift package by the old URL keeps resolving; switch it to the new URL when
