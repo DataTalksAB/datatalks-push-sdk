@@ -312,7 +312,7 @@ class PushSyncTest {
         val identity = PendingIdentity.Identify("member-1001", null, null)
         store.acceptedIdentity = AcceptedIdentity(identityFingerprint(store.installId!!, identity), harness.now / DAY_MILLIS, false)
 
-        store.replaceAppKey("dtpk_prd_live_Fixture0AppKey000000000000000000")
+        store.replaceAppKey("dtpk_prd_Fixture0AppKey000000000000000000")
 
         assertThat(store.acceptedIdentity).isNull()
     }

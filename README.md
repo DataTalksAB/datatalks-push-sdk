@@ -2,26 +2,27 @@
 
 Client SDKs for push notifications sent with [Data Talks](https://datatalks.se): Android, iOS, .NET MAUI and Capacitor.
 
-**Status: `0.5.0-beta.1`.** The API can still change before 1.0.
+**Status: `1.0.0-rc.1`,** the release candidate for 1.0.
 
 | SDK | Folder | Install |
 |---|---|---|
-| Android (Kotlin) | [sdks/android](sdks/android) | `implementation("se.datatalks:push-android:0.5.0-beta.1")` from Maven Central |
-| iOS (Swift) | [sdks/ios](sdks/ios) | Swift Package Manager: `https://github.com/DataTalksTeam/datatalks-push-sdk`, from `0.5.0-beta.1` |
-| .NET MAUI | [sdks/maui](sdks/maui) | `dotnet add package DataTalks.Push.Maui --version 0.5.0-beta.1` |
-| Capacitor | [sdks/capacitor](sdks/capacitor) | `npm install @datatalks-ab/push-capacitor@0.5.0-beta.1` |
+| Android (Kotlin) | [sdks/android](sdks/android) | `implementation("se.datatalks:push-android:1.0.0-rc.1")` from Maven Central |
+| iOS (Swift) | [sdks/ios](sdks/ios) | Swift Package Manager: `https://github.com/DataTalksTeam/datatalks-push-sdk`, from `1.0.0-rc.1` |
+| .NET MAUI | [sdks/maui](sdks/maui) | `dotnet add package DataTalks.Push.Maui --version 1.0.0-rc.1` |
+| Capacitor | [sdks/capacitor](sdks/capacitor) | `npm install @datatalks-ab/push-capacitor@1.0.0-rc.1` |
 
 Each SDK's README covers set-up, the API and its sample app. For an Ionic React app, follow
 [the Ionic React guide](sdks/capacitor/guide-ionic-react.md). React Native and Flutter SDKs come later.
 
 ## How it works
 
-1. Create a push app in the Data Talks portal and copy its app keys: a test key (`dtpk_prd_test_…`) for test builds
-   and a live key (`dtpk_prd_live_…`) for store builds. If you need a sandbox environment, contact the Data Talks team.
+1. Create a push app in the Data Talks portal and copy its app key (`dtpk_prd_…`). Every build of the app uses the same
+   key. If you need a sandbox environment, contact the Data Talks team.
 2. Start the SDK with the key when the app launches. It registers the device and keeps the registration current.
 3. When a user signs in, identify them; when they sign out, log out. An app that requires verified identity passes an
    identity token signed by its backend.
-4. Send campaigns from Data Talks. The SDK shows them, opens their links and reports deliveries, opens and clicks.
+4. Send campaigns from Data Talks. The SDK shows them, opens their links and reports deliveries, opens and clicks. To
+   try a push first, add your phone on the push app's Test devices tab and send a test.
 
 ## Repository
 
@@ -35,7 +36,7 @@ Each SDK's README covers set-up, the API and its sample app. For an Ionic React 
 
 ## Sample apps
 
-One small app per framework, each on Android and iOS, to try a push app's test key and to show the SDK's calls in code.
+One small app per framework, each on Android and iOS, to try a push app's key and to show the SDK's calls in code.
 They share Data Talks' colours, a SANDBOX badge, and the same sections: app, user, device and events.
 
 | App | Framework | Folder | Package and bundle id | Key |
@@ -51,7 +52,7 @@ for the permission and show what the SDK reports. A real push needs, for each id
 - an Android app in your Firebase project, and its `google-services.json` in the sample's Android folder (it stays out
   of git);
 - an App ID with Push Notifications in your Apple developer account, for a device build;
-- a push app in the Data Talks portal for that package and bundle id, whose test key (`dtpk_prd_test_…`) goes into the
+- a push app in the Data Talks portal for that package and bundle id, whose app key (`dtpk_prd_…`) goes into the
   sample.
 
 The icons, launch images and header marks come from [tools/sample-icons](tools/sample-icons): `render.ps1` renders and

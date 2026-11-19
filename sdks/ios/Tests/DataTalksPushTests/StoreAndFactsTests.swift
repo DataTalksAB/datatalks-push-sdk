@@ -200,6 +200,8 @@ final class StoreAndFactsTests: XCTestCase {
 
     func testAppKeysChooseTheHostAndAnythingElseIsNoKey() {
         let body = String(repeating: "A", count: 32)
+        XCTAssertEqual(AppKeys.baseUrl("dtpk_prd_\(body)"), "https://push.datatalks.se/v1")
+        XCTAssertEqual(AppKeys.baseUrl("dtpk_stg_\(body)"), "https://push.staging.datatalks.se/v1")
         XCTAssertEqual(AppKeys.baseUrl("dtpk_prd_live_\(body)"), "https://push.datatalks.se/v1")
         XCTAssertEqual(AppKeys.baseUrl("dtpk_prd_test_\(body)"), "https://push.datatalks.se/v1")
         XCTAssertEqual(AppKeys.baseUrl("dtpk_stg_live_\(body)"), "https://push.staging.datatalks.se/v1")

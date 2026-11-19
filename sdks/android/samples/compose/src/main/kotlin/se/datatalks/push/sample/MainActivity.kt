@@ -237,9 +237,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun keyDescription(key: String): String {
-        val match = Regex("^dtpk_(stg|prd)_(live|test)_").find(key) ?: return "A key from the portal's push app, dtpk_prd_test_…"
-        val environment = if (match.groupValues[1] == "stg") "Staging" else "Production"
-        val mode = match.groupValues[2]
-        return if (mode == "live") "$environment, live key. A sandbox should use a test key." else "$environment, test key"
+        val match = Regex("^dtpk_(stg|prd)_").find(key) ?: return "The app key from the portal's push app, dtpk_prd_…"
+        return if (match.groupValues[1] == "stg") "Staging app key" else "Production app key"
     }
 }

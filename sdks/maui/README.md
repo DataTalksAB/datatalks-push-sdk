@@ -14,7 +14,7 @@ public static MauiApp CreateMauiApp()
     var builder = MauiApp.CreateBuilder();
     builder
         .UseMauiApp<App>()
-        .UseDataTalksPush("dtpk_prd_live_...");
+        .UseDataTalksPush("dtpk_prd_...");
 
     return builder.Build();
 }
@@ -64,7 +64,7 @@ A tap that arrives before anything subscribes to `NotificationOpened`, such as t
 A push's link opens as in a native app: an `https` link through the system, any other scheme inside the app. An app that routes links itself turns this off and gets the link only from `NotificationOpened`:
 
 ```csharp
-builder.UseDataTalksPush("dtpk_prd_live_...", new DataTalksPushOptions(OpenLinks: false));
+builder.UseDataTalksPush("dtpk_prd_...", new DataTalksPushOptions(OpenLinks: false));
 ```
 
 ## An app that already receives pushes

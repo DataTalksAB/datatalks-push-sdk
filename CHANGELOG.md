@@ -2,6 +2,12 @@
 
 All SDKs in this repository share one version.
 
+## 1.0.0-rc.1
+
+- One app key for every build: the portal issues `dtpk_{env}_…` keys, without `live_` or `test_`. Keys issued before
+  keep working. Test pushes go to the phones added on the push app's Test devices tab, whatever key they were built
+  with.
+
 ## 0.5.0-beta.1
 
 First public release, for Android, iOS, .NET MAUI and Capacitor.

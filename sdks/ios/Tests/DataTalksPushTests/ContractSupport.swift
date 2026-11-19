@@ -12,7 +12,7 @@ enum Contract {
         .deletingLastPathComponent()
         .appendingPathComponent("spec")
 
-    static let appKey = "dtpk_stg_live_Fixture0AppKey000000000000000000"
+    static let appKey = "dtpk_stg_Fixture0AppKey000000000000000000"
     static let deviceSecret = "Fixture0Secret000000000000000000"
     static let wrongSecret = "Fixture0WrongSecret0000000000000"
     static let identityToken = "fixture.identity.token"

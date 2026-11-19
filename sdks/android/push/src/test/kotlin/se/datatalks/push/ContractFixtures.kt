@@ -11,7 +11,7 @@ import java.io.File
 internal object Contract {
     val dir = File(System.getProperty("spec.dir") ?: error("spec.dir isn't set: run the tests through Gradle."))
 
-    const val APP_KEY = "dtpk_stg_live_Fixture0AppKey000000000000000000"
+    const val APP_KEY = "dtpk_stg_Fixture0AppKey000000000000000000"
     const val DEVICE_SECRET = "Fixture0Secret000000000000000000"
     const val WRONG_SECRET = "Fixture0WrongSecret0000000000000"
     const val IDENTITY_TOKEN = "fixture.identity.token"

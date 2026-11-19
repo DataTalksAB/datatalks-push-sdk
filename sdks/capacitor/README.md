@@ -16,7 +16,7 @@ Set the app key in `capacitor.config.ts`, so the SDK starts at launch, before yo
 ```ts
 plugins: {
   DataTalksPush: {
-    appKey: 'dtpk_prd_live_...',
+    appKey: 'dtpk_prd_...',
     openLinks: false, // the app routes a push's link itself, from notificationOpened
   },
 },
@@ -209,5 +209,5 @@ Then build `samples/plain/android` with Java 17: Capacitor 6's Gradle 8.2 doesn'
 cd samples/ionic-react
 npm install
 npm run build
-DATATALKS_PUSH_APP_KEY=dtpk_prd_test_... npx cap sync
+DATATALKS_PUSH_APP_KEY=dtpk_prd_... npx cap sync
 ```

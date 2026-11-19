@@ -8,7 +8,7 @@ struct DeliveryReporter {
     static let requestTimeout: TimeInterval = 5
 
     /// Same value as the app's `SdkInfo.header`: the service doesn't need to tell them apart.
-    static let sdkHeader = "datatalks-push-ios/0.5.0-beta.1"
+    static let sdkHeader = "datatalks-push-ios/1.0.0-rc.1"
 
     private static let timestamps: ISO8601DateFormatter = {
         let format = ISO8601DateFormatter()

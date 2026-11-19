@@ -511,7 +511,7 @@ final class PushSyncTests: XCTestCase {
             day: Int(harness.now / Self.day),
             verified: false)
 
-        store.replaceAppKey("dtpk_prd_live_Fixture0AppKey000000000000000000")
+        store.replaceAppKey("dtpk_prd_Fixture0AppKey000000000000000000")
 
         XCTAssertNil(store.acceptedIdentity)
     }

@@ -145,12 +145,11 @@ struct ContentView: View {
 
     static func describe(key: String) -> String {
         let parts = key.split(separator: "_")
-        guard key.hasPrefix("dtpk_"), parts.count >= 4, ["stg", "prd"].contains(parts[1]), ["live", "test"].contains(parts[2]) else {
-            return "A key from the portal's push app, dtpk_prd_test_…"
+        guard key.hasPrefix("dtpk_"), parts.count >= 3, ["stg", "prd"].contains(parts[1]) else {
+            return "The app key from the portal's push app, dtpk_prd_…"
         }
 
-        let environment = parts[1] == "stg" ? "Staging" : "Production"
-        return parts[2] == "live" ? "\(environment), live key. A sandbox should use a test key." : "\(environment), test key"
+        return parts[1] == "stg" ? "Staging app key" : "Production app key"
     }
 }
 

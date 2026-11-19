@@ -8,7 +8,7 @@
 class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        DataTalksPush.initialize(this, "dtpk_prd_live_...")
+        DataTalksPush.initialize(this, "dtpk_prd_...")
     }
 }
 ```
@@ -136,5 +136,5 @@ With an emulator running:
 To also run the full device flow against a local ingress, pass its URL and an app key:
 
 ```bash
-./gradlew :push:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.baseUrl=http://10.0.2.2:5000/v1 -Pandroid.testInstrumentationRunnerArguments.appKey=dtpk_stg_live_...
+./gradlew :push:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.baseUrl=http://10.0.2.2:5000/v1 -Pandroid.testInstrumentationRunnerArguments.appKey=dtpk_stg_...
 ```

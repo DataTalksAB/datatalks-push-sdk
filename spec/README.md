@@ -52,8 +52,8 @@ service gives.
 
 | Placeholder | In a request | In a response |
 |---|---|---|
-| `{{app_key}}` | The app's live key | — |
-| `{{app_key:test}}`, `{{app_key:revoked}}`, `{{app_key:other_environment}}` | A test key, a revoked key, a key of the other environment | — |
+| `{{app_key}}` | The app key | — |
+| `{{app_key:revoked}}`, `{{app_key:other_environment}}` | A revoked key, a key of the other environment | — |
 | `{{server_key}}` | The app's server key | — |
 | `{{capture:device_secret}}` | — | Any 32 base62 characters; remembered as `device_secret` |
 | `{{device_secret}}` | The remembered secret | — |

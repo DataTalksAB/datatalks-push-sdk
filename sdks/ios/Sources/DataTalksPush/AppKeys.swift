@@ -2,7 +2,8 @@ import Foundation
 import os
 
 enum AppKeys {
-    private static let shape = try! NSRegularExpression(pattern: "^dtpk_(stg|prd)_(live|test)_[0-9A-Za-z]{32}$")
+    // dtpk_{env}_ and 32 base62 characters. Keys issued before 1.0 have live_ or test_ after the environment; they still work.
+    private static let shape = try! NSRegularExpression(pattern: "^dtpk_(stg|prd)_(?:(?:live|test)_)?[0-9A-Za-z]{32}$")
 
     /// The base URL of the key's environment, or nil for a malformed key.
     static func baseUrl(_ appKey: String) -> String? {
@@ -16,7 +17,7 @@ enum AppKeys {
 }
 
 enum SdkInfo {
-    static let version = "0.5.0-beta.1"
+    static let version = "1.0.0-rc.1"
     static let header = "datatalks-push-ios/\(version)"
 }
 

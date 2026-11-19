@@ -171,6 +171,8 @@ class PushStoreAndFactsTest {
     @Test
     fun appKeys_chooseTheHost_AndAnythingElseIsNoKey() {
         val body = "Fixture0AppKey00000000000000000000".take(32)
+        assertThat(AppKeys.baseUrl("dtpk_prd_$body")).isEqualTo("https://push.datatalks.se/v1")
+        assertThat(AppKeys.baseUrl("dtpk_stg_$body")).isEqualTo("https://push.staging.datatalks.se/v1")
         assertThat(AppKeys.baseUrl("dtpk_prd_live_$body")).isEqualTo("https://push.datatalks.se/v1")
         assertThat(AppKeys.baseUrl("dtpk_prd_test_$body")).isEqualTo("https://push.datatalks.se/v1")
         assertThat(AppKeys.baseUrl("dtpk_stg_live_$body")).isEqualTo("https://push.staging.datatalks.se/v1")

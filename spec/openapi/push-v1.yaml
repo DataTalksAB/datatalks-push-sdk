@@ -13,12 +13,12 @@ info:
     refused with `key_wrong_environment`.
 
     **Callers and credentials.**
-    - The SDK sends the app key (`X-DataTalks-App-Key: dtpk_{env}_{live|test}_…`) on every call, and from the first
+    - The SDK sends the app key (`X-DataTalks-App-Key: dtpk_{env}_…`) on every call, and from the first
       registration on also the device secret it got back (`X-DataTalks-Device-Secret`).
     - A customer's backend sends only the server key (`X-DataTalks-Server-Key: dtsk_{env}_…`) on the `/server` routes.
       An app key is never accepted there, and a server key never on the device routes.
-    - Every call should carry `X-DataTalks-SDK`, for example `datatalks-push-android/0.5.0-beta.1` or
-      `datatalks-push-ios/0.5.0-beta.1 capacitor/0.5.0-beta.1`: the SDK and version, then optionally the wrapper and its
+    - Every call should carry `X-DataTalks-SDK`, for example `datatalks-push-android/1.0.0-rc.1` or
+      `datatalks-push-ios/1.0.0-rc.1 capacitor/1.0.0-rc.1`: the SDK and version, then optionally the wrapper and its
       version. The ingress stores it on the device row (`sdk_name`, `sdk_version`, `sdk_wrapper`).
 
     **Errors.** Every error answer is `{"error": {"code", "message", "detail"?, "fields"?}}`. `code` is stable and
@@ -418,7 +418,7 @@ components:
       type: apiKey
       in: header
       name: X-DataTalks-App-Key
-      description: 'The publishable app key, `dtpk_{stg|prd}_{live|test}_{32 base62}`. Safe to ship inside the app.'
+      description: 'The publishable app key, `dtpk_{stg|prd}_{32 base62}`, the same in every build of the app. Safe to ship inside the app. Keys issued before 1.0, `dtpk_{stg|prd}_{live|test}_{32 base62}`, still work.'
     deviceSecret:
       type: apiKey
       in: header
@@ -439,7 +439,7 @@ components:
         type: string
         maxLength: 128
         pattern: '^[a-z0-9.-]{1,48}/[0-9A-Za-z.+-]{1,32}( [a-z0-9.-]{1,32}/[0-9A-Za-z.+-]{1,32})?$'
-      example: datatalks-push-android/0.5.0-beta.1
+      example: datatalks-push-android/1.0.0-rc.1
     InstallId:
       name: install_id
       in: path

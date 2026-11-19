@@ -8,13 +8,13 @@ The plugin accepts Capacitor 6 to 8. It has been built and run in Capacitor 6 ap
 
 From your push app in the Data Talks portal:
 
-- **An app key per build.** A test key (`dtpk_prd_test_…`) for your test builds and a live key (`dtpk_prd_live_…`) for the store build. The key also picks the host, so nothing else is configured.
+- **The app key** (`dtpk_prd_…`), the same in every build. The key also picks the host, so nothing else is configured.
 - **The App ID and an identity secret,** from the push app's **Identity** tab. Your backend signs identity tokens with them (see [Identity tokens](#identity-tokens)). The secret is shown once: store it with your backend's other secrets.
 - **Your Firebase project's `google-services.json`** for the app's Android package, and **your APNs key** uploaded to the push app for iOS.
 
 And in the app: Android `minSdkVersion` 23 or later, and iOS 14 or later (15 when you build with Xcode 27).
 
-To see the SDK at work before you change your app, run DT Ionic, the sandbox demo in [`samples/ionic-react/`](samples/ionic-react/), with your test key. It is an Ionic 6 app with this guide's code: a tap on a push with the link `myapp://tickets/1042` opens its ticket page. On Ionic 6, keep `@types/react` at 18.2.7: from 18.2.8, Ionic 6's components don't type-check.
+To see the SDK at work before you change your app, run DT Ionic, the sandbox demo in [`samples/ionic-react/`](samples/ionic-react/), with your app key. It is an Ionic 6 app with this guide's code: a tap on a push with the link `myapp://tickets/1042` opens its ticket page. On Ionic 6, keep `@types/react` at 18.2.7: from 18.2.8, Ionic 6's components don't type-check.
 
 ## 1. Take out your current push plugin
 
@@ -42,7 +42,7 @@ const config: CapacitorConfig = {
   // ...
   plugins: {
     DataTalksPush: {
-      appKey: process.env.DATATALKS_PUSH_APP_KEY, // dtpk_prd_test_… or dtpk_prd_live_…
+      appKey: process.env.DATATALKS_PUSH_APP_KEY, // dtpk_prd_…
       openLinks: false,
     },
   },
@@ -244,9 +244,9 @@ When the service refuses a token, the `identityResult` event has `errorCode` `id
 
 ## Try it
 
-1. Build with the test key, and run on a device: Android, and iOS with a development profile that has push.
+1. Build with the app key, and run on a device: Android, and iOS with a development profile that has push.
 2. Sign in and allow notifications. An `identityResult` event without an `errorCode` means the identify was accepted, and `verified: true` that your token counted. Data Talks links the device to the user's profile afterwards, in the background.
-3. From the portal, send a push with a link to the user you signed in as: once with the app open (a `messageReceived` event), once with it in the background, and once with it closed. Each tap should route to the link.
+3. Add the phone on the push app's Test devices tab (find it by the user you signed in as), and send a test push with a link: once with the app open (a `messageReceived` event), once with it in the background, and once with it closed. Each tap should route to the link.
 4. Sign out, and send again: the push should no longer reach the user on that device.
 
 ## When something is off

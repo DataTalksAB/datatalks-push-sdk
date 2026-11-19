@@ -16,7 +16,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         DataTalksPush.listener = myListener
         DataTalksPush.useAsNotificationCenterDelegate()
-        DataTalksPush.initialize(appKey: "dtpk_prd_live_...")
+        DataTalksPush.initialize(appKey: "dtpk_prd_...")
         return true
     }
 
@@ -161,7 +161,7 @@ The tests replay [`spec/fixtures`](../../spec/fixtures) against a stub `URLProto
 The sample's UI tests need a running ingress, and pushes delivered with `xcrun simctl push` while they wait. Without the settings below they skip themselves:
 
 ```bash
-TEST_RUNNER_SAMPLE_APP_KEY=dtpk_stg_live_... TEST_RUNNER_SAMPLE_BASE_URL=http://localhost:5000/v1 TEST_RUNNER_SAMPLE_TEST_TOKEN=a1b2... xcodebuild test -project sdks/ios/samples/swiftui/DataTalksPushSample.xcodeproj -scheme DataTalksPushSample -destination "platform=iOS Simulator,name=iPhone 17"
+TEST_RUNNER_SAMPLE_APP_KEY=dtpk_stg_... TEST_RUNNER_SAMPLE_BASE_URL=http://localhost:5000/v1 TEST_RUNNER_SAMPLE_TEST_TOKEN=a1b2... xcodebuild test -project sdks/ios/samples/swiftui/DataTalksPushSample.xcodeproj -scheme DataTalksPushSample -destination "platform=iOS Simulator,name=iPhone 17"
 ```
 
 A push payload for the simulator:

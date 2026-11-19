@@ -187,13 +187,12 @@ public sealed class MainPage : ContentPage
     private static string DescribeKey(string? key)
     {
         var parts = (key ?? string.Empty).Trim().Split('_');
-        if (parts.Length < 4 || parts[0] != "dtpk" || parts[1] is not ("stg" or "prd") || parts[2] is not ("live" or "test"))
+        if (parts.Length < 3 || parts[0] != "dtpk" || parts[1] is not ("stg" or "prd"))
         {
-            return "A key from the portal's push app, dtpk_prd_test_…";
+            return "The app key from the portal's push app, dtpk_prd_…";
         }
 
-        var environment = parts[1] == "stg" ? "Staging" : "Production";
-        return parts[2] == "live" ? $"{environment}, live key. A sandbox should use a test key." : $"{environment}, test key";
+        return parts[1] == "stg" ? "Staging app key" : "Production app key";
     }
 
     /// <summary>The permission can change in the system's settings while the app is away, so the window calls this when it comes back.</summary>
