@@ -49,17 +49,56 @@ final class StoreAndFactsTests: XCTestCase {
         XCTAssertNil(again.pendingDelete?.baseUrl)
     }
 
-    func testAReinstallStartsAsANewInstall() {
+    func testAReinstallStartsAsANewInstall_AndDeletesThePreviousOne() {
         let values = MemoryValues()
         let first = PushStore(values: values, defaults: freshDefaults())
+        first.appKey = Contract.appKey
         first.installId = Contract.installId
         first.deviceSecret = Contract.deviceSecret
 
         // The Keychain survives the uninstall; the defaults don't.
         let afterReinstall = PushStore(values: values, defaults: freshDefaults())
 
+        XCTAssertNil(afterReinstall.appKey)
         XCTAssertNil(afterReinstall.installId)
         XCTAssertNil(afterReinstall.deviceSecret)
+        XCTAssertEqual(
+            afterReinstall.pendingDelete,
+            PendingDelete(appKey: Contract.appKey, baseUrl: nil, installId: Contract.installId, deviceSecret: Contract.deviceSecret))
+    }
+
+    func testAReinstallKeepsADeleteThePreviousInstallHadntSent() {
+        let values = MemoryValues()
+        let first = PushStore(values: values, defaults: freshDefaults())
+        first.pendingDelete = PendingDelete(appKey: Contract.appKey, baseUrl: nil, installId: Contract.installId, deviceSecret: Contract.deviceSecret)
+
+        let afterReinstall = PushStore(values: values, defaults: freshDefaults())
+
+        XCTAssertEqual(afterReinstall.pendingDelete?.installId, Contract.installId)
+    }
+
+    func testAReinstallOfAnAppThatNeverRegisteredHasNothingToDelete() {
+        let values = MemoryValues()
+        let first = PushStore(values: values, defaults: freshDefaults())
+        first.appKey = Contract.appKey
+
+        let afterReinstall = PushStore(values: values, defaults: freshDefaults())
+
+        XCTAssertNil(afterReinstall.pendingDelete)
+    }
+
+    func testAnUpdateKeepsTheInstall() {
+        let values = MemoryValues()
+        let defaults = freshDefaults()
+        let first = PushStore(values: values, defaults: defaults)
+        first.appKey = Contract.appKey
+        first.installId = Contract.installId
+        first.deviceSecret = Contract.deviceSecret
+
+        let afterUpdate = PushStore(values: values, defaults: defaults)
+
+        XCTAssertEqual(afterUpdate.installId, Contract.installId)
+        XCTAssertNil(afterUpdate.pendingDelete)
     }
 
     func testAValueTheKeychainRefusesLivesOnlyInMemory() {

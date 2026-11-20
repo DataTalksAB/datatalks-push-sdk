@@ -261,6 +261,18 @@ final class PushSyncTests: XCTestCase {
         XCTAssertFalse(sync.isDue())
     }
 
+    func testAPendingDeleteWhoseKeyNoLongerWorksIsDroppedWithoutStoppingTheSdk() {
+        let baseUrl = store.baseUrl
+        store.wipe()
+        store.pendingDelete = PendingDelete(appKey: Contract.appKey, baseUrl: baseUrl, installId: Contract.installId, deviceSecret: Contract.deviceSecret)
+        StubServer.enqueue(.error(401, "key_invalid"))
+
+        XCTAssertEqual(sync.run(), .done)
+
+        XCTAssertNil(store.pendingDelete)
+        XCTAssertFalse(sync.stopped, "the key belonged to the deleted install, not necessarily to this one")
+    }
+
     func testEventsGoAfterTheRegistrationWithTheSecretAndAreForgottenOnceAnswered() {
         registerOnce()
         store.queueEvent(PushEvent.open, uid: Self.uid, occurredAt: harness.now - 60)

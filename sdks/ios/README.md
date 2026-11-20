@@ -134,7 +134,7 @@ extension share: two apps with this SDK in one group would take each other's del
 - **Opens and clicks** are reported to the campaign's results (contract 1.1.0): an open for each tap, plus a click when the push has a link, whether the SDK or your app opens it. They are queued on the device (up to 200, for up to 30 days) and sent with the next sync while the app runs. They carry the push's id and the time, nothing about the person or the device.
 - **Delivery** is reported by the app's [Notification Service Extension](#pictures-and-delivery-receipts). Without one, the service counts an opened push as delivered.
 - **The APNs environment** comes from the app's provisioning profile: `sandbox` for development builds and `production` for all others, App Store builds included. A simulator is `sandbox`. Through Firebase, Firebase picks it.
-- **A reinstall is a new install.** The Keychain survives an uninstall, but the SDK starts over, since uninstalling the app also signs the user out.
+- **A reinstall is a new install.** The Keychain survives an uninstall, but the SDK starts over, since uninstalling the app also signs the user out. It also deletes the previous install on the service, with that install's own secret, so the old device doesn't stay behind on the previous user's profile.
 - **Retries run only while the app runs.** Anything left when the app stops is sent at the next launch: iOS offers an SDK no way to run it later unless the app adds a background mode.
 - **Pictures** need the [Notification Service Extension](#pictures-and-delivery-receipts) too.
 

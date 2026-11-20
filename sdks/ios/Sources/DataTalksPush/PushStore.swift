@@ -131,11 +131,23 @@ final class PushStore {
         self.shared = shared
 
         // The Keychain survives an uninstall and the defaults don't, so a reinstall clears the Keychain and starts a new install, as on
-        // Android. Otherwise the reinstalled app would keep receiving the previous user's pushes.
+        // Android. Otherwise the reinstalled app would keep receiving the previous user's pushes. The previous install is deleted on the
+        // service as well, with its own secret, so it doesn't stay behind as a device of the user who had it.
         if !defaults.bool(forKey: Key.installed) {
+            let previous = Self.previousInstall(in: values)
             values.removeAll()
+            if let previous { writeSecure(Key.pendingDelete, Self.format(previous)) }
             defaults.set(true, forKey: Key.installed)
         }
+    }
+
+    /// What deleting the install a reinstall replaces needs, read before the Keychain is cleared; or the delete it hadn't sent yet.
+    private static func previousInstall(in values: SecureValues) -> PendingDelete? {
+        if let appKey = values.read(Key.appKey), let installId = values.read(Key.installId), let secret = values.read(Key.deviceSecret) {
+            return PendingDelete(appKey: appKey, baseUrl: nil, installId: installId, deviceSecret: secret)
+        }
+
+        return values.read(Key.pendingDelete).flatMap(parseDelete)
     }
 
     var appKey: String? {

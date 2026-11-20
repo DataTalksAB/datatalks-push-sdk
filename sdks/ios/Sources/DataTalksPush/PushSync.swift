@@ -144,7 +144,10 @@ final class PushSync {
 
         let api = PushApi(baseUrl: baseUrl, appKey: pending.appKey, session: session)
         let response = try api.call("DELETE", "/devices/\(pending.installId)", deviceSecret: pending.deviceSecret)
-        if !response.isSuccess, let stop = stopFor(response) { return stop }
+
+        // A busy or failing service is tried again. Any other answer ends the delete: the install is already gone, or its key no longer
+        // works. That key can be a reinstall's previous one, so its refusal must not stop the SDK for the install in use now.
+        if !response.isSuccess, let wait = waitFor(response) { return wait }
         store.pendingDelete = nil
         return .next
     }
@@ -357,13 +360,7 @@ final class PushSync {
 
     /// The responses that end this run; nil for those the step handles itself.
     private func stopFor(_ response: ApiResponse) -> Step? {
-        if response.status == 429 || response.status == 503 {
-            let seconds = response.retryAfterSeconds ?? Self.defaultRetryAfterSeconds
-            store.notBefore = clock() + TimeInterval(seconds)
-            return .stop(.retryAfter(seconds))
-        }
-
-        if response.status >= 500 { return .stop(.backoff) }
+        if let wait = waitFor(response) { return wait }
 
         if [Code.appDisabled, Code.keyInvalid, Code.keyWrongEnvironment].contains(response.code) {
             PushLog.warning("The service stopped this app: \(response.code ?? "no code")")
@@ -372,6 +369,17 @@ final class PushSync {
         }
 
         return nil
+    }
+
+    /// The service is busy or failing: wait as it asks, or back off.
+    private func waitFor(_ response: ApiResponse) -> Step? {
+        if response.status == 429 || response.status == 503 {
+            let seconds = response.retryAfterSeconds ?? Self.defaultRetryAfterSeconds
+            store.notBefore = clock() + TimeInterval(seconds)
+            return .stop(.retryAfter(seconds))
+        }
+
+        return response.status >= 500 ? .stop(.backoff) : nil
     }
 
     /// Days since the epoch, in UTC: the unit of the daily refresh and of `AcceptedIdentity.day`.
