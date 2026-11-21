@@ -76,6 +76,8 @@ func application(_ application: UIApplication, didFailToRegisterForRemoteNotific
 
 The SDK requests the token itself. Data Talks sends through APNs with your app's own key, so the app needs no Firebase on iOS.
 
+On iPhone, a push shows its picture only when the app has a Notification Service Extension: without it, iOS shows the text alone, and counts a push as delivered once it's opened. The package ships the extension's code as a second pod and Swift package product, `DataTalksPushExtension`; each app adds its own extension target, as [Pictures and delivery receipts](guide-ionic-react.md#pictures-and-delivery-receipts) in the Ionic React guide shows.
+
 ### iOS through Firebase
 
 If your iOS app already sends through its own Firebase project, set the iOS transport to FCM in the portal and post the FCM token instead, as Capacitor's Firebase setup does:

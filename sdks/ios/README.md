@@ -98,6 +98,10 @@ Either way, set the delegate before `application(_:didFinishLaunchingWithOptions
 
 ## Pictures and delivery receipts
 
+> [!IMPORTANT]
+> On iPhone, a push shows its picture only when the app has this extension: without it, iOS shows the text alone. Each app adds its
+> own, with the app's bundle id, App Group and provisioning profile; the SDK supplies its code, a one-line class. Android needs none.
+
 A Notification Service Extension shows a push's picture and reports its delivery as soon as it arrives, whether or not the app is
 running. Without one, iOS shows only the text, and the service counts a push as delivered once it's opened.
 

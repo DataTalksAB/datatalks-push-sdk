@@ -130,6 +130,9 @@ On Android the call does nothing: the SDK reads the token itself. On iOS, the SD
 
 ## Pictures and delivery receipts (iOS)
 
+> [!IMPORTANT]
+> On iPhone, a push shows its picture only when the app has this extension: without it, iOS shows the text alone. Each app adds its own, with the app's bundle id, App Group and provisioning profile; the SDK supplies its code, a one-line class. Android needs none.
+
 By default, iOS shows only a push's text, and Data Talks counts a push as delivered when it is opened. A Notification Service Extension shows the picture and reports the delivery as soon as the push arrives, whether the app is running or not. The extension is native: an Xcode project next to the MAUI app, which the MAUI build copies into the app.
 
 1. In Xcode, create an iOS project with a **Notification Service Extension** target named `NotificationService`, bundle id `<your app id>.NotificationService`, deployment target 15. Add the `DataTalksPushExtension` product of the iOS SDK's Swift package to that target (not `DataTalksPush`: an extension can't link the app's SDK), and replace the generated class with:

@@ -101,7 +101,10 @@ The plugin needs nothing else for scenes. Your own code in `AppDelegate.swift`'s
 
 Other plugins may need a change too. On Capacitor 6, `@capacitor/browser`'s `Browser.open()` shows nothing under scenes until it gets `presentationStyle: 'popover'`. [The README](README.md#scenes-for-xcode-27) explains why, and has a command that finds other plugins with the same problem.
 
-### Pictures and delivery receipts (optional)
+### Pictures and delivery receipts
+
+> [!IMPORTANT]
+> On iPhone, a push shows its picture only when the app has this extension: without it, iOS shows the text alone. Each app adds its own, with the app's bundle id, App Group and provisioning profile; the package supplies its code, a one-line class. Android needs none.
 
 By default, iOS shows only a push's text, and Data Talks counts a push as delivered when it is opened. A Notification Service Extension shows the picture, and reports the delivery as soon as the push arrives, whether the app is running or not. The package ships it as a second pod (and Swift package product), `DataTalksPushExtension`, without Capacitor: an extension can't link the app's runtime.
 
