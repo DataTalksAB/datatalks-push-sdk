@@ -17,7 +17,7 @@ enum AppKeys {
 }
 
 enum SdkInfo {
-    static let version = "1.0.0-rc.2"
+    static let version = "1.0.0-rc.3"
     static let header = "datatalks-push-ios/\(version)"
 }
 

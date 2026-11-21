@@ -1,7 +1,7 @@
 ext {
     // The Android SDK this plugin wraps, bundled in this package's maven/ so the plugin always ships the SDK it was built
     // with. The same version as in the SDK's gradle.properties, which scripts/vendor-native.mjs checks.
-    dataTalksPushVersion = '1.0.0-rc.2'
+    dataTalksPushVersion = '1.0.0-rc.3'
     androidxAppCompatVersion = project.hasProperty('androidxAppCompatVersion') ? rootProject.ext.androidxAppCompatVersion : '1.6.1'
 }
 

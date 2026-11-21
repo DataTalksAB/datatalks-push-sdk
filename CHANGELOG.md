@@ -2,7 +2,7 @@
 
 All SDKs in this repository share one version.
 
-## Unreleased
+## 1.0.0-rc.3
 
 - iOS: a reinstall deletes the previous install on the service, so the old device no longer stays on the profile
   of the user who had it. A delete refused because its key no longer works is dropped and no longer stops the SDK.

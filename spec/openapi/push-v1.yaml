@@ -17,8 +17,8 @@ info:
       registration on also the device secret it got back (`X-DataTalks-Device-Secret`).
     - A customer's backend sends only the server key (`X-DataTalks-Server-Key: dtsk_{env}_…`) on the `/server` routes.
       An app key is never accepted there, and a server key never on the device routes.
-    - Every call should carry `X-DataTalks-SDK`, for example `datatalks-push-android/1.0.0-rc.2` or
-      `datatalks-push-ios/1.0.0-rc.2 capacitor/1.0.0-rc.2`: the SDK and version, then optionally the wrapper and its
+    - Every call should carry `X-DataTalks-SDK`, for example `datatalks-push-android/1.0.0-rc.3` or
+      `datatalks-push-ios/1.0.0-rc.3 capacitor/1.0.0-rc.3`: the SDK and version, then optionally the wrapper and its
       version. The ingress stores it on the device row (`sdk_name`, `sdk_version`, `sdk_wrapper`).
 
     **Errors.** Every error answer is `{"error": {"code", "message", "detail"?, "fields"?}}`. `code` is stable and
@@ -439,7 +439,7 @@ components:
         type: string
         maxLength: 128
         pattern: '^[a-z0-9.-]{1,48}/[0-9A-Za-z.+-]{1,32}( [a-z0-9.-]{1,32}/[0-9A-Za-z.+-]{1,32})?$'
-      example: datatalks-push-android/1.0.0-rc.2
+      example: datatalks-push-android/1.0.0-rc.3
     InstallId:
       name: install_id
       in: path
